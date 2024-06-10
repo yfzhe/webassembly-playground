@@ -1,0 +1,33 @@
+{
+  "name": "webassembly-playground",
+  "version": "0.0.0",
+  "description": "WebAssembly Playground",
+  "author": "yfzhe",
+  "license": "MIT",
+  "keywords": [
+    "webassembly",
+    "playground"
+  ],
+  "type": "module",
+  "scripts": {
+    "start": "webpack serve --config webpack.config.dev.js",
+    "build": "webpack --config webpack.config.prod.js"
+  },
+  "devDependencies": {
+    "@types/react-dom": "^18.2.22",
+    "css-loader": "^6.10.0",
+    "html-webpack-plugin": "^5.6.0",
+    "style-loader": "^3.3.4",
+    "ts-loader": "^9.5.1",
+    "typescript": "~5.4.3",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4",
+    "webpack-merge": "^5.10.0"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "wabt": "^1.0.32"
+  }
+}
