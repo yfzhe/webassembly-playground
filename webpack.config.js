@@ -1,8 +1,9 @@
 import path from "node:path"
+import { merge } from "webpack-merge"
 import HtmlWebpackPlugin from "html-webpack-plugin"
 
 /** @type {import("webpack").Configuration} */
-export default {
+const baseConfig = {
   entry: {
     main: "./src/index.tsx",
     preview: "./src/preview/index.ts",
@@ -56,4 +57,32 @@ export default {
       }
     },
   },
+}
+
+export default function (env, argv) {
+  const { mode } = argv
+
+  switch (mode) {
+    case "production": {
+      return merge(baseConfig, {
+        mode: "production",
+        output: {
+          filename: "[name].[contenthash:8].js",
+        },
+      })
+    }
+
+    case "development": {
+      return merge(baseConfig, {
+        mode: "development",
+        devtool: "inline-source-map",
+        devServer: {
+          static: "./dist",
+          hot: true,
+          server: "https",
+          port: "3000",
+        },
+      })
+    }
+  }
 }
