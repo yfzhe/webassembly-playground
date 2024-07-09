@@ -1,5 +1,4 @@
-import { createRoot } from "react-dom/client";
-import App from "./App";
+import "./app";
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register(
@@ -11,6 +10,3 @@ if ("serviceWorker" in navigator) {
     { scope: "./" }
   )
 }
-
-const root = createRoot(document.getElementById("root")!);
-root.render(<App />);

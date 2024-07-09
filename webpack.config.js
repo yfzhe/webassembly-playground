@@ -6,7 +6,7 @@ import NodePolyfillWebpackPlugin from "node-polyfill-webpack-plugin";
 /** @type {import("webpack").Configuration} */
 const baseConfig = {
   entry: {
-    main: "./src/index.tsx",
+    main: "./src/index.ts",
   },
   module: {
     rules: [
@@ -39,12 +39,12 @@ const baseConfig = {
     }),
     new HtmlWebpackPlugin({
       filename: "index.html",
-      template: "index.html",
+      template: "src/index.html",
       chunks: ["main"],
     }),
     new HtmlWebpackPlugin({
       filename: "preview.html",
-      template: "preview.html",
+      template: "src/preview.html",
       chunks: [],
     })
   ],
