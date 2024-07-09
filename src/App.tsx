@@ -20,7 +20,7 @@ function App() {
     if (worker) {
       const log = await compile(worker, [
         {
-          filename: "main.wasm",
+          filename: "main.wat",
           content: taWasm.current!.value,
         },
         {

@@ -1,6 +1,7 @@
-import path from "node:path"
-import { merge } from "webpack-merge"
-import HtmlWebpackPlugin from "html-webpack-plugin"
+import path from "node:path";
+import { merge } from "webpack-merge";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import NodePolyfillWebpackPlugin from "node-polyfill-webpack-plugin";
 
 /** @type {import("webpack").Configuration} */
 const baseConfig = {
@@ -30,10 +31,12 @@ const baseConfig = {
     extensions: [".ts", ".tsx", "..."],
     fallback: {
       fs: false,
-      path: false,
     }
   },
   plugins: [
+    new NodePolyfillWebpackPlugin({
+      onlyAliases: ["path"],
+    }),
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "index.html",

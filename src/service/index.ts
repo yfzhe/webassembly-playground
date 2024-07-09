@@ -6,6 +6,7 @@
 declare const self : ServiceWorkerGlobalScope;
 
 import initWabt from "wabt";
+import path from "path";
 import { MessageType } from "./lib";
 
 let wabt: Awaited<ReturnType<typeof initWabt>>;
@@ -36,18 +37,29 @@ const compile = (data: CompileData) => {
 
   for (const file of files) {
     const { filename, content } = file;
-    if (/\.wasm$/.test(filename)) {
-      try {
-        const module = wabt.parseWat(filename, content, {});
-        module.validate();
-        const result = module.toBinary({ log: true });
-        cache.set(filename, result.buffer);
-        logs.push(result.log);
-      } catch (e) {
-        logs.push((e as Error).message);
+    const ext = path.extname(filename);
+
+    switch (ext) {
+      case ".wat": {
+        try {
+          const module = wabt.parseWat(filename, content, {});
+          module.validate();
+          const result = module.toBinary({ log: true });
+
+          const wasmFilename = `${path.basename(filename, ext)}.wasm`;
+          cache.set(wasmFilename, result.buffer);
+
+          logs.push(result.log);
+        } catch (e) {
+          logs.push((e as Error).message);
+        }
+        break;
       }
-    } else if (/\.js$/.test(filename)) {
-      cache.set(filename, content);
+
+      case ".js": {
+        cache.set(filename, content);
+        break;
+      }
     }
   }
 
@@ -67,22 +79,20 @@ self.addEventListener("message", (evt) => {
   evt.ports[0]?.postMessage(result);
 });
 
+const MIME_MAP: Record<string, string> = {
+  ".wasm": "application/wasm",
+  ".js": "application/javascript; charset=utf-8",
+}
+
 self.addEventListener("fetch", (evt) => {
   const url = new URL(evt.request.url);
 
   if (url.origin === self.origin) {
     const content = cache.get(url.pathname.substring(1));
     if (content) {
-      const [_, ext] = /\.(.+)$/.exec(url.pathname)!;
+      const ext = path.extname(url.pathname);
       const headers = new Headers();
-      const contentType = (() => {
-        switch (ext) {
-          case "wasm": return "application/wasm";
-          case "js": return "application/javascript; charset=utf-8";
-          default: return "";
-        }
-      })();
-      headers.append("Content-Type", contentType);
+      headers.append("Content-Type", MIME_MAP[ext] ?? "");
       evt.respondWith(new Response(content, { headers }));
     }
   }
