@@ -87,10 +87,11 @@ const MIME_MAP: Record<string, string> = {
 self.addEventListener("fetch", (evt) => {
   const url = new URL(evt.request.url);
 
-  if (url.origin === self.origin) {
-    const content = cache.get(url.pathname.substring(1));
+  if (url.origin === self.origin && url.pathname.startsWith("/preview")) {
+    const filename = url.pathname.substring(9); // remove "/preview/"
+    const content = cache.get(filename);
     if (content) {
-      const ext = path.extname(url.pathname);
+      const ext = path.extname(filename);
       const headers = new Headers();
       headers.append("Content-Type", MIME_MAP[ext] ?? "");
       evt.respondWith(new Response(content, { headers }));

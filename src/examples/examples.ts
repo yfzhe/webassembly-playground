@@ -21,7 +21,7 @@ export default [
         content: wat,
       },
       {
-        filename: "preview.js",
+        filename: "index.js",
         content: js,
       }
     ],

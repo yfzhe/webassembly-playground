@@ -48,7 +48,7 @@ function preview() {
 
   const iframe = document.createElement("iframe");
   iframe.className = "preview";
-  iframe.src = "./preview.html";
+  iframe.src = "./preview/index.html";
 
   previewBlock.append(iframe);
 }

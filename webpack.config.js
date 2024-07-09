@@ -43,7 +43,7 @@ const baseConfig = {
       chunks: ["main"],
     }),
     new HtmlWebpackPlugin({
-      filename: "preview.html",
+      filename: "preview/index.html",
       template: "src/preview.html",
       chunks: [],
     })
