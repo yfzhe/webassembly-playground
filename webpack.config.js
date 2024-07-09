@@ -6,13 +6,19 @@ import HtmlWebpackPlugin from "html-webpack-plugin"
 const baseConfig = {
   entry: {
     main: "./src/index.tsx",
-    preview: "./src/preview/index.ts",
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        use: [
+          {
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true,
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,
@@ -35,12 +41,12 @@ const baseConfig = {
     }),
     new HtmlWebpackPlugin({
       filename: "preview.html",
-      title: "Preview",
-      chunks: ["preview"],
+      template: "preview.html",
+      chunks: [],
     })
   ],
   output: {
-    filename: "[name].bundle.js",
+    filename: "[name].js",
     path: path.resolve(import.meta.dirname, "dist"),
     clean: true,
   },
@@ -68,6 +74,13 @@ export default function (env, argv) {
         mode: "production",
         output: {
           filename: "[name].[contenthash:8].js",
+          chunkFilename: (pathData) => {
+            if (pathData.chunk.name === "service-worker") {
+              return "service-worker.js";
+            } else {
+              return "[name].[contenthash:8].js";
+            }
+          },
         },
       })
     }

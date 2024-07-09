@@ -1,37 +1,38 @@
 import { useCallback, useRef, useState } from "react";
 
+import { compile } from "./service/lib";
 import examples from "./examples/examples";
 import Block from './Block';
 import Preview from "./Preview";
 import "./style.css";
 
-const wabt = await import("wabt")
-  .then(({ default: initWabt }) => initWabt())
-
 function App() {
   const taWasm = useRef<HTMLTextAreaElement>(null);
   const taJs = useRef<HTMLTextAreaElement>(null);
-  const previewRef = useRef<HTMLIFrameElement>(null);
+
+  const [previewId, setPreviewId] = useState<number>(0);
 
   const [log, setLog] = useState<string | null>(null);
 
-  const run = useCallback(() => {
-    try {
-      const module = wabt.parseWat("file.wat", taWasm.current!.value, {});
-      module.validate();
-      const { buffer, log } = module.toBinary({ log: true });
-      setLog(log);
+  const run = useCallback(async () => {
+    const worker = navigator.serviceWorker.controller;
 
-      const blob = new Blob([buffer], { type: "application/wasm" });
-      const blobUrl = URL.createObjectURL(blob);
-      const js = taJs.current!.value;
-      previewRef.current!
-        .contentWindow
-        ?.postMessage({ js, blobUrl }, { targetOrigin: "*" /* FIXME */ });
-    } catch (e) {
-      setLog((e as Error).message);
+    if (worker) {
+      const log = await compile(worker, [
+        {
+          filename: "main.wasm",
+          content: taWasm.current!.value,
+        },
+        {
+          filename: "preview.js",
+          content: taJs.current!.value,
+        }
+      ]);
+
+      setLog(log);
+      setPreviewId((id) => id + 1);
     }
-  }, [])
+  }, []);
 
   const example = examples[0]!;
 
@@ -53,7 +54,7 @@ function App() {
         <div className="splitter" />
         <div className="result">
           <Block title="Preview">
-            <Preview ref={previewRef} />
+            <Preview key={previewId} />
           </Block>
           <Block title="Compile Log">
             <pre className="log">{log}</pre>
