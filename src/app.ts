@@ -3,6 +3,7 @@ import examples from "./examples/examples";
 import "./style.css";
 
 const example = examples[0]!;
+const { files } = example;
 
 function createBlock(title: string, content: HTMLElement) {
   const block = document.createElement("div");
@@ -28,14 +29,12 @@ resultPanel.className = "result";
 
 main.append(codePanel, splitter, resultPanel);
 
-const taWat = document.createElement("textarea");
-const taJs = document.createElement("textarea");
-taWat.value = example.wat;
-taJs.value = example.js;
-codePanel.append(
-  createBlock("WAT", taWat),
-  createBlock("JavaScript", taJs)
-);
+for (const file of files) {
+  const { filename, content } = file;
+  const textarea = document.createElement("textarea");
+  textarea.value = content;
+  codePanel.append(createBlock(filename, textarea));
+}
 
 const previewBlock = createBlock("preview", document.createElement("iframe"));
 const logD = document.createElement("pre");
@@ -63,16 +62,15 @@ button.onclick = async () => {
   const worker = navigator.serviceWorker.controller;
 
   if (worker) {
-    const log = await compile(worker, [
-      {
-        filename: "main.wat",
-        content: taWat.value,
-      },
-      {
-        filename: "preview.js",
-        content: taJs.value,
-      }
-    ]);
+    const textareas = document.querySelectorAll(".code textarea");
+    const newFiles = [];
+    for (let i = 0; i < files.length; i++) {
+      newFiles.push({
+        filename: files[i]!.filename,
+        content: (textareas[i] as HTMLTextAreaElement).value,
+      })
+    }
+    const log = await compile(worker, newFiles);
 
     preview();
     logD.innerText = log;

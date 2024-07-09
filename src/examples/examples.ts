@@ -6,7 +6,7 @@ const wat =
     i32.add))`
 
 const js =
-  `const wasm = await WebAssembly.instantiateStreaming(fetch("main.wasm"), {});
+  `const wasm = await WebAssembly.instantiateStreaming(fetch("add.wasm"), {});
 const { add } = wasm.instance.exports;
 for (let i = 0; i < 10; i++) {
   console.log(add(i, i));
@@ -15,7 +15,15 @@ for (let i = 0; i < 10; i++) {
 export default [
   {
     title: "add",
-    wat: wat,
-    js: js,
+    files: [
+      {
+        filename: "add.wat",
+        content: wat,
+      },
+      {
+        filename: "preview.js",
+        content: js,
+      }
+    ],
   }
 ]
