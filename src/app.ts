@@ -1,5 +1,5 @@
 import { compile } from "./service/lib";
-import examples from "./examples/examples";
+import examples from "./examples/index.json";
 import "./style.css";
 
 const example = examples[0]!;
@@ -53,10 +53,7 @@ function preview() {
   previewBlock.append(iframe);
 }
 
-resultPanel.append(
-  previewBlock,
-  createBlock("Compile Log", logD)
-);
+resultPanel.append(previewBlock, createBlock("Compile Log", logD));
 
 button.onclick = async () => {
   const worker = navigator.serviceWorker.controller;
@@ -68,7 +65,7 @@ button.onclick = async () => {
       newFiles.push({
         filename: files[i]!.filename,
         content: (textareas[i] as HTMLTextAreaElement).value,
-      })
+      });
     }
     const log = await compile(worker, newFiles);
 

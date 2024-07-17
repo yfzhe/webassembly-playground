@@ -2,6 +2,7 @@ import path from "node:path";
 import { merge } from "webpack-merge";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import NodePolyfillWebpackPlugin from "node-polyfill-webpack-plugin";
+import ExamplesPlugin from "./webpack/examples-plugin.js";
 
 /** @type {import("webpack").Configuration} */
 const baseConfig = {
@@ -31,12 +32,13 @@ const baseConfig = {
     extensions: [".ts", ".tsx", "..."],
     fallback: {
       fs: false,
-    }
+    },
   },
   plugins: [
     new NodePolyfillWebpackPlugin({
       onlyAliases: ["path"],
     }),
+    new ExamplesPlugin(),
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "src/index.html",
@@ -46,7 +48,7 @@ const baseConfig = {
       filename: "preview/index.html",
       template: "src/preview.html",
       chunks: [],
-    })
+    }),
   ],
   output: {
     filename: "[name].js",
@@ -62,14 +64,14 @@ const baseConfig = {
           test: /[\\/]node_modules[\\/]wabt/,
           name: "wabt",
           chunks: "all",
-        }
-      }
+        },
+      },
     },
   },
-}
+};
 
 export default function (env, argv) {
-  const { mode } = argv
+  const { mode } = argv;
 
   switch (mode) {
     case "production": {
@@ -85,7 +87,7 @@ export default function (env, argv) {
             }
           },
         },
-      })
+      });
     }
 
     case "development": {
@@ -98,7 +100,7 @@ export default function (env, argv) {
           server: "https",
           port: "3000",
         },
-      })
+      });
     }
   }
 }
