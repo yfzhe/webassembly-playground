@@ -9,7 +9,8 @@
 
     "module": "esnext",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "allowArbitraryExtensions": true,
   },
   "include": ["src"],
 }
