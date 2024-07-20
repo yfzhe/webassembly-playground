@@ -7,31 +7,33 @@ import VirtualModulesPlugin from "webpack-virtual-modules";
 const SOURCE_PATH = "./src/examples";
 const TARGET_PATH = "./src/examples/index.json";
 
-function isExampleFile(filename) {
-  return [".wat", ".js"].includes(extname(filename));
+async function generateExamples() {
+  const subdirs = await readdir(SOURCE_PATH);
+  const examples = await Promise.all(subdirs.map(generateExample));
+  return examples.filter(Boolean);
 }
 
-async function generateExamples() {
-  const examples = [];
+async function generateExample(dir) {
+  const path = resolve(SOURCE_PATH, dir);
 
-  for (const subpath of await readdir(SOURCE_PATH)) {
-    const subdir = resolve(SOURCE_PATH, subpath);
-    const stat = await lstat(subdir);
+  const stat = await lstat(path);
+  if (!stat.isDirectory()) return null;
 
-    if (!stat.isDirectory()) continue;
+  const filenames = await readdir(path);
+  const wats = await extractFiles(path, filenames, ".wat");
+  const jss = await extractFiles(path, filenames, ".js");
+  return { title: dir, files: wats.concat(jss) };
+}
 
-    const filenames = await readdir(subdir);
-    const files = await Promise.all(
-      filenames.filter(isExampleFile).map(async (filename) => ({
+function extractFiles(basePath, files, ext) {
+  return Promise.all(
+    files
+      .filter((f) => extname(f) === ext)
+      .map(async (filename) => ({
         filename,
-        content: await readFile(resolve(subdir, filename), "utf-8"),
+        content: await readFile(resolve(basePath, filename), "utf-8"),
       })),
-    );
-
-    examples.push({ title: subpath, files });
-  }
-
-  return examples;
+  );
 }
 
 class ExamplesPlugin {
