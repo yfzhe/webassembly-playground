@@ -2,8 +2,24 @@ import { compile } from "./service/lib";
 import examples from "./examples/index.json";
 import "./style.css";
 
-const example = examples[0]!;
-const { files } = example;
+document.body.innerHTML = `
+<header>
+  <h1 class="title">WebAssembly Playground</h1>
+  <nav>
+    <select id="select-example"></select>
+    <button id="run">run</button>
+  </nav>
+</header>
+<main>
+  <div class="code"></div>
+  <div class="splitter"></div>
+  <div class="result"></div>
+</main>
+`;
+
+const codePanel = document.querySelector("div.code")!;
+const splitter = document.querySelector("div.splitter")!;
+const resultPanel = document.querySelector("div.result")!;
 
 function createBlock(title: string, content: HTMLElement) {
   const block = document.createElement("div");
@@ -17,28 +33,20 @@ function createBlock(title: string, content: HTMLElement) {
   return block;
 }
 
-const button = document.querySelector("button#run") as HTMLButtonElement;
-const main = document.querySelector("main")!;
+function setupEditors(example: (typeof examples)[number]) {
+  codePanel.replaceChildren();
 
-const codePanel = document.createElement("div");
-codePanel.className = "code";
-const splitter = document.createElement("div");
-splitter.className = "splitter";
-const resultPanel = document.createElement("div");
-resultPanel.className = "result";
-
-main.append(codePanel, splitter, resultPanel);
-
-for (const file of files) {
-  const { filename, content } = file;
-  const textarea = document.createElement("textarea");
-  textarea.value = content;
-  codePanel.append(createBlock(filename, textarea));
+  for (const file of example.files) {
+    const { filename, content } = file;
+    const textarea = document.createElement("textarea");
+    textarea.value = content;
+    textarea.dataset.filename = filename;
+    codePanel.append(createBlock(filename, textarea));
+  }
 }
 
-const previewBlock = createBlock("preview", document.createElement("iframe"));
-const logD = document.createElement("pre");
-logD.className = "log";
+const previewBlock = createBlock("Preview", document.createElement("iframe"));
+resultPanel.append(previewBlock);
 
 function preview() {
   const previous = previewBlock.querySelector("iframe");
@@ -53,23 +61,36 @@ function preview() {
   previewBlock.append(iframe);
 }
 
-resultPanel.append(previewBlock, createBlock("Compile Log", logD));
+const exampleSelector = document.getElementById(
+  "select-example",
+) as HTMLSelectElement;
 
+for (const example of examples) {
+  exampleSelector.append(new Option(example.title, example.title));
+}
+
+exampleSelector.onchange = (evt) => {
+  const { value } = evt.target as HTMLSelectElement;
+  const example = examples.find((ex) => ex.title === value)!;
+  setupEditors(example);
+};
+
+setupEditors(examples[0]!);
+
+const button = document.querySelector("button#run") as HTMLButtonElement;
 button.onclick = async () => {
-  const worker = navigator.serviceWorker.controller;
+  const sw = navigator.serviceWorker.controller;
 
-  if (worker) {
+  if (sw) {
     const textareas = document.querySelectorAll(".code textarea");
-    const newFiles = [];
-    for (let i = 0; i < files.length; i++) {
-      newFiles.push({
-        filename: files[i]!.filename,
-        content: (textareas[i] as HTMLTextAreaElement).value,
-      });
-    }
-    const log = await compile(worker, newFiles);
-
+    const files = Array.prototype.map.call(
+      textareas,
+      (textarea: HTMLTextAreaElement) => ({
+        filename: textarea.dataset.filename,
+        content: textarea.value,
+      }),
+    );
+    await compile(sw, files);
     preview();
-    logD.innerText = log;
   }
 };
