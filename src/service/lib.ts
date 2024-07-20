@@ -12,10 +12,15 @@ function postMessageToWorker(sw: ServiceWorker, data: unknown): Promise<any> {
   });
 }
 
+export type Log = {
+  filename: string;
+  log: string;
+};
+
 export function compile(
   sw: ServiceWorker,
   files: Array<File>,
-): Promise<string> {
+): Promise<Array<Log>> {
   return postMessageToWorker(sw, {
     type: MessageType.Compile,
     files,

@@ -3,11 +3,11 @@
 // - https://github.com/Microsoft/TypeScript/issues/14877#issuecomment-340279293
 
 /// <reference lib="webworker" />
-declare const self : ServiceWorkerGlobalScope;
+declare const self: ServiceWorkerGlobalScope;
 
 import initWabt from "wabt";
 import path from "path";
-import { MessageType } from "./lib";
+import { MessageType, type Log } from "./lib";
 
 let wabt: Awaited<ReturnType<typeof initWabt>>;
 
@@ -15,25 +15,25 @@ const cache: Map<string, string | Uint8Array> = new Map();
 
 self.addEventListener("install", (evt) => {
   evt.waitUntil(
-    initWabt().then(_wabt => { wabt = _wabt; })
+    initWabt().then((_wabt) => {
+      wabt = _wabt;
+    }),
   );
 });
 
-self.addEventListener("activate", (evt) => {
-  console.log('Service worker is ready!');
-});
+self.addEventListener("activate", (evt) => {});
 
 type CompileData = {
-  type: MessageType.Compile,
-  files: Array<{ filename: string, content: string }>,
-}
+  type: MessageType.Compile;
+  files: Array<{ filename: string; content: string }>;
+};
 
 const compile = (data: CompileData) => {
   const { files } = data;
 
   cache.clear();
 
-  let logs: Array<string> = [];
+  let logs: Array<Log> = [];
 
   for (const file of files) {
     const { filename, content } = file;
@@ -49,9 +49,9 @@ const compile = (data: CompileData) => {
           const wasmFilename = `${path.basename(filename, ext)}.wasm`;
           cache.set(wasmFilename, result.buffer);
 
-          logs.push(result.log);
+          logs.push({ filename, log: result.log });
         } catch (e) {
-          logs.push((e as Error).message);
+          logs.push({ filename, log: (e as Error).message });
         }
         break;
       }
@@ -63,8 +63,8 @@ const compile = (data: CompileData) => {
     }
   }
 
-  return logs.join("\n");
-}
+  return logs;
+};
 
 self.addEventListener("message", (evt) => {
   let result: unknown;
@@ -82,7 +82,7 @@ self.addEventListener("message", (evt) => {
 const MIME_MAP: Record<string, string> = {
   ".wasm": "application/wasm",
   ".js": "application/javascript; charset=utf-8",
-}
+};
 
 self.addEventListener("fetch", (evt) => {
   const url = new URL(evt.request.url);
