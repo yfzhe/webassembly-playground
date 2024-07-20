@@ -1,5 +1,6 @@
 import { compile } from "./service/lib";
 import examples from "./examples/index.json";
+import type { File } from "./types";
 import "./style.css";
 
 document.body.innerHTML = `
@@ -83,10 +84,10 @@ button.onclick = async () => {
 
   if (sw) {
     const textareas = document.querySelectorAll(".code textarea");
-    const files = Array.prototype.map.call(
+    const files = (Array.prototype.map<File>).call(
       textareas,
       (textarea: HTMLTextAreaElement) => ({
-        filename: textarea.dataset.filename,
+        filename: textarea.dataset.filename!,
         content: textarea.value,
       }),
     );

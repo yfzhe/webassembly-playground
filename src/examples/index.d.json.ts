@@ -1,12 +1,4 @@
-type ExampleFile = {
-  filename: string;
-  content: string;
-};
-
-type Example = {
-  title: string;
-  files: Array<ExampleFile>;
-};
+import type { Example } from "../types";
 
 declare const examples: Array<Example>;
 export default examples;
