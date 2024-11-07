@@ -1,3 +1,5 @@
+import * as monaco from "monaco-editor";
+
 import { compile } from "./service/lib";
 import examples from "./examples/index.json";
 import type { File } from "./types";
@@ -13,14 +15,14 @@ document.body.innerHTML = `
 </header>
 <main>
   <div class="code"></div>
-  <div class="splitter"></div>
   <div class="result"></div>
 </main>
 `;
 
 const codePanel = document.querySelector("div.code")!;
-const splitter = document.querySelector("div.splitter")!;
 const resultPanel = document.querySelector("div.result")!;
+
+let editors: Record<string, monaco.editor.IStandaloneCodeEditor> = {};
 
 function createBlock(title: string, content: HTMLElement) {
   const block = document.createElement("div");
@@ -34,15 +36,22 @@ function createBlock(title: string, content: HTMLElement) {
   return block;
 }
 
-function setupEditors(example: (typeof examples)[number]) {
+function setupExample(example: (typeof examples)[number]) {
   codePanel.replaceChildren();
+  editors = {};
 
   for (const file of example.files) {
     const { filename, content } = file;
-    const textarea = document.createElement("textarea");
-    textarea.value = content;
-    textarea.dataset.filename = filename;
-    codePanel.append(createBlock(filename, textarea));
+
+    const container = document.createElement("div");
+    const editor = monaco.editor.create(container, {
+      value: content,
+      automaticLayout: true,
+      minimap: { enabled: false },
+    });
+
+    codePanel.append(createBlock(filename, container));
+    editors[filename] = editor;
   }
 }
 
@@ -73,25 +82,22 @@ for (const example of examples) {
 exampleSelector.onchange = (evt) => {
   const { value } = evt.target as HTMLSelectElement;
   const example = examples.find((ex) => ex.title === value)!;
-  setupEditors(example);
+  setupExample(example);
 };
 
-setupEditors(examples[0]!);
+setupExample(examples[0]!);
 
 const button = document.querySelector("button#run") as HTMLButtonElement;
 button.onclick = async () => {
   const sw = navigator.serviceWorker.controller;
+  if (!sw) return;
 
-  if (sw) {
-    const textareas = document.querySelectorAll(".code textarea");
-    const files = (Array.prototype.map<File>).call(
-      textareas,
-      (textarea: HTMLTextAreaElement) => ({
-        filename: textarea.dataset.filename!,
-        content: textarea.value,
-      }),
-    );
-    await compile(sw, files);
-    preview();
-  }
+  const files = Object.entries(editors).map(
+    ([filename, editor]): File => ({
+      filename,
+      content: editor.getValue(),
+    }),
+  );
+  await compile(sw, files);
+  preview();
 };

@@ -2,6 +2,7 @@ import path from "node:path";
 import { merge } from "webpack-merge";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import NodePolyfillWebpackPlugin from "node-polyfill-webpack-plugin";
+import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 import ExamplesPlugin from "./webpack/examples-plugin.js";
 
 /** @type {import("webpack").Configuration} */
@@ -26,6 +27,10 @@ const baseConfig = {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
       },
+      {
+        test: /\.ttf$/,
+        type: "asset/resource",
+      },
     ],
   },
   resolve: {
@@ -38,6 +43,7 @@ const baseConfig = {
     new NodePolyfillWebpackPlugin({
       onlyAliases: ["path"],
     }),
+    new MonacoWebpackPlugin(),
     new ExamplesPlugin(),
     new HtmlWebpackPlugin({
       filename: "index.html",
