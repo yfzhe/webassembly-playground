@@ -8,7 +8,7 @@ import ExamplesPlugin from "./webpack/examples-plugin.js";
 /** @type {import("webpack").Configuration} */
 const baseConfig = {
   entry: {
-    main: "./src/index.ts",
+    main: "./src/index.tsx",
   },
   module: {
     rules: [

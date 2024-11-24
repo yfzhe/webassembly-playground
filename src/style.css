@@ -1,7 +1,6 @@
 * {
   box-sizing: border-box;
-  --color-primary: #a8dadc;
-  --color-secondary: #f1faee;
+  --color-primary: #654ff0;
 }
 
 button {
@@ -10,7 +9,7 @@ button {
   border: 1px solid black;
 }
 
-body {
+#root {
   height: 100vh;
 }
 
@@ -18,6 +17,7 @@ header {
   height: 80px;
   padding: 10px 32px;
   background-color: var(--color-primary);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
