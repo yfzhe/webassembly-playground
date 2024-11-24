@@ -1,14 +1,17 @@
 import { useRef, useState } from "react";
+import { GitHub } from "react-feather";
 
-import { compile } from "../service/lib";
-import examples from "../examples/index.json";
 import type { File } from "../types";
-import "../style.css";
+import { compile } from "../service/lib";
 import CodeBlock, { type CodeBlockRef } from "./CodeBlock";
+import examples from "../examples/index.json";
+import "../style.css";
 
 type Project = {
   files: File[];
 };
+
+const GITHUB_REPO_URL = "https://github.com/yfzhe/webassembly-playground";
 
 function App() {
   const [project, setProject] = useState<Project>(examples[0]!);
@@ -45,23 +48,36 @@ function App() {
 
   return (
     <>
-      <header>
+      <header className="site-header">
         <h1 className="title">WebAssembly Playground</h1>
+        <div>
+          <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">
+            <GitHub />
+          </a>
+        </div>
       </header>
-      <nav>
-        <select onChange={handleSelectExample}>
-          {examples.map((example) => {
-            const { title } = example;
-            return (
-              <option key={title} value={title}>
-                {title}
-              </option>
-            );
-          })}
-        </select>
-        <button id="run" onClick={run}>
-          Run
-        </button>
+      <nav className="navbar">
+        <ul className="nav">
+          <li className="example-selector">
+            <select onChange={handleSelectExample}>
+              {examples.map((example) => {
+                const { title } = example;
+                return (
+                  <option key={title} value={title}>
+                    {title}
+                  </option>
+                );
+              })}
+            </select>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <button id="run" onClick={run}>
+              Run
+            </button>
+          </li>
+        </ul>
       </nav>
       <main>
         <div className="code">
