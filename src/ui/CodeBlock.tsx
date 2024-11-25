@@ -7,16 +7,16 @@ export type CodeBlockProps = {
 };
 
 export type CodeBlockRef = {
-  getEditor(): monaco.editor.IStandaloneCodeEditor;
+  getEditor(): monaco.editor.IStandaloneCodeEditor | null;
 };
 
 const CodeBlock = forwardRef<CodeBlockRef, CodeBlockProps>(
   ({ filename, initialContent = "" }, ref) => {
-    const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
+    const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(ref, () => ({
-      getEditor: () => editorRef.current!,
+      getEditor: () => editorRef.current,
     }));
 
     useEffect(() => {

@@ -19,7 +19,7 @@ function App() {
 
   // This `previewId` state is an self-incremental integer.
   // We use an iframe for preview, and `previewId` is used as the key for the
-  // iframe element. When a new preview session is excuated, `previewId is
+  // iframe element. When a new preview session is excuated, `previewId` is
   // incremented by 1, where a new iframe element will be rendered.
   // The initial value of `previewId` is 0, which means there is no preview session.
   const [previewId, setPreviewId] = useState<number>(0);
@@ -31,7 +31,7 @@ function App() {
     const files = Array.from(codeBlocksRef.current.entries()).map(
       ([filename, ref]): File => ({
         filename,
-        content: ref.getEditor().getValue(),
+        content: ref.getEditor()!.getValue(),
       }),
     );
     const logs = await compile(sw, files);
