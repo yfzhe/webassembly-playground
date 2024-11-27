@@ -1,22 +1,27 @@
-import { Hook, Unhook } from "console-feed";
+import { useEffect, useRef } from "react";
+import { useAtomValue, useSetAtom } from "jotai";
+import { Decode, Hook, Unhook } from "console-feed";
 import type { HookedConsole } from "console-feed/lib/definitions/Console";
-import { memo, useEffect, useRef } from "react";
 
-export type PreviewProps = {
-  previewId: number;
-  onConsoleLog: Parameters<typeof Hook>[1];
-};
+import { consoleLogsAtom, previewIdAtom } from "../state";
 
-function Preview({ previewId, onConsoleLog }: PreviewProps) {
+function Preview() {
+  const previewId = useAtomValue(previewIdAtom);
+  const setConsoleLogs = useSetAtom(consoleLogsAtom);
+
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     const iframe = iframeRef.current;
     let hooked: HookedConsole | undefined;
 
+    const appendConsoleLogs =
+      // @ts-expect-error  why there are two `Message` types in the same package...
+      (log) => setConsoleLogs((logs) => [...logs, Decode(log)]);
+
     if (iframe) {
       iframe.addEventListener("load", () => {
-        hooked = Hook(iframe.contentWindow!.window.console, onConsoleLog);
+        hooked = Hook(iframe.contentWindow!.window.console, appendConsoleLogs);
       });
     }
 
@@ -27,9 +32,13 @@ function Preview({ previewId, onConsoleLog }: PreviewProps) {
     };
   }, [previewId]);
 
-  if (previewId <= 0) return null;
-
-  return <iframe key={previewId} ref={iframeRef} src="./preview/index.html" />;
+  return (
+    <div className="preview">
+      {previewId > 0 && (
+        <iframe key={previewId} ref={iframeRef} src="./preview/index.html" />
+      )}
+    </div>
+  );
 }
 
-export default memo(Preview);
+export default Preview;
