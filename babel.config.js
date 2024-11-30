@@ -1,3 +1,8 @@
+import ReactRefreshPlugin from "react-refresh/babel";
+
+const { BABEL_ENV } = process.env;
+const isDevelopment = BABEL_ENV === "development";
+
 const config = {
   presets: [
     "@babel/preset-env",
@@ -9,6 +14,7 @@ const config = {
       },
     ],
   ],
+  plugins: [isDevelopment && ReactRefreshPlugin].filter(Boolean),
 };
 
 export default config;

@@ -1,5 +1,6 @@
 import path from "node:path";
 import { merge } from "webpack-merge";
+import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import NodePolyfillWebpackPlugin from "node-polyfill-webpack-plugin";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
@@ -73,6 +74,8 @@ const baseConfig = {
 export default function (env, argv) {
   const { mode } = argv;
 
+  process.env.BABEL_ENV = mode;
+
   switch (mode) {
     case "production": {
       return merge(baseConfig, {
@@ -93,6 +96,7 @@ export default function (env, argv) {
     case "development": {
       return merge(baseConfig, {
         mode: "development",
+        plugins: [new ReactRefreshWebpackPlugin()],
         devtool: "inline-source-map",
         devServer: {
           static: "./dist",
