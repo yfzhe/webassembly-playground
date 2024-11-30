@@ -11,5 +11,5 @@ insert_final_newline = true
 indent_style = space
 trim_trailing_whitespace = true
 
-[*.{js,ts,tsx,css}]
+[*.{js,ts,tsx,css,json}]
 indent_size = 2
