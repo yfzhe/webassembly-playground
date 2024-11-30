@@ -7,7 +7,8 @@ declare const self: ServiceWorkerGlobalScope;
 
 import initWabt from "wabt";
 import path from "path";
-import { MessageType, type Log } from "./lib";
+import { MessageType, type CompileLog, type Message } from "./lib";
+import type { File } from "../types";
 
 let wabt: Awaited<ReturnType<typeof initWabt>>;
 
@@ -23,17 +24,10 @@ self.addEventListener("install", (evt) => {
 
 self.addEventListener("activate", (evt) => {});
 
-type CompileData = {
-  type: MessageType.Compile;
-  files: Array<{ filename: string; content: string }>;
-};
-
-const compile = (data: CompileData) => {
-  const { files } = data;
-
+function compile(files: Array<File>) {
   cache.clear();
 
-  let logs: Array<Log> = [];
+  let logs: Array<CompileLog> = [];
 
   for (const file of files) {
     const { filename, content } = file;
@@ -49,9 +43,9 @@ const compile = (data: CompileData) => {
           const wasmFilename = `${path.basename(filename, ext)}.wasm`;
           cache.set(wasmFilename, result.buffer);
 
-          logs.push({ filename, log: result.log });
+          logs.push({ filename, result: "ok", log: result.log });
         } catch (e) {
-          logs.push({ filename, log: (e as Error).message });
+          logs.push({ filename, result: "err", log: (e as Error).message });
         }
         break;
       }
@@ -64,14 +58,16 @@ const compile = (data: CompileData) => {
   }
 
   return logs;
-};
+}
 
 self.addEventListener("message", (evt) => {
+  const message = evt.data as Message;
+
   let result: unknown;
 
-  switch (evt.data.type) {
+  switch (message.type) {
     case MessageType.Compile: {
-      result = compile(evt.data);
+      result = compile(message.files);
       break;
     }
   }

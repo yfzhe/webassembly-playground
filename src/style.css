@@ -102,7 +102,7 @@ button {
   border: none;
 }
 
-.util-panels {
+.util-panel {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
   display: flex;
@@ -111,11 +111,13 @@ button {
 
 .tabs {
   height: 32px;
+  display: flex;
 }
 
 .tab {
   font-weight: 700;
   padding: 6px 12px;
+  cursor: pointer;
 }
 
 .console-log {

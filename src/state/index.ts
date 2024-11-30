@@ -1,12 +1,15 @@
 import { atom } from "jotai";
-import type { File } from "../types";
 import type { Message as ConsoleMessage } from "console-feed/lib/definitions/Component";
 
+import type { CompileLog } from "../service/lib";
+import type { File } from "../types";
 import examples from "../examples/index.json";
 
 export const filesAtom = atom<Array<File>>(examples[0]!.files);
 
 export const consoleLogsAtom = atom<Array<ConsoleMessage>>([]);
+
+export const compileLogsAtom = atom<Array<CompileLog>>([]);
 
 // This `previewId` state is an self-incremental integer.
 // We use an iframe for preview, and `previewId` is used as the key for the
@@ -19,3 +22,7 @@ export const previewIdAtom = atom(
   (get) => get(_previewId),
   (get, set) => set(_previewId, get(_previewId) + 1),
 );
+
+export type UtilPanelTab = "console" | "compile_log";
+
+export const utilPanelTabAtom = atom<UtilPanelTab>("console");

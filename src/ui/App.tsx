@@ -4,7 +4,13 @@ import { GitHub } from "react-feather";
 
 import type { File } from "../types";
 import { compile } from "../service/lib";
-import { filesAtom, previewIdAtom } from "../state";
+import {
+  compileLogsAtom,
+  consoleLogsAtom,
+  filesAtom,
+  previewIdAtom,
+  utilPanelTabAtom,
+} from "../state";
 
 import CodeBlock, { type CodeBlockRef } from "./CodeBlock";
 import Examples from "./Examples";
@@ -17,6 +23,9 @@ const GITHUB_REPO_URL = "https://github.com/yfzhe/webassembly-playground";
 function App() {
   const files = useAtomValue(filesAtom);
   const preview = useSetAtom(previewIdAtom);
+  const setConsoleLogs = useSetAtom(consoleLogsAtom);
+  const setCompileLogs = useSetAtom(compileLogsAtom);
+  const setUtilPanelTab = useSetAtom(utilPanelTabAtom);
 
   const codeBlocksRef = useRef(new Map<string, CodeBlockRef>());
 
@@ -32,8 +41,15 @@ function App() {
     );
 
     const logs = await compile(sw, files);
-    // TODO: should I clear consoleLogs before starting a new preview session?
-    preview();
+    setCompileLogs(logs);
+
+    if (logs.some((log) => log.result === "err")) {
+      setUtilPanelTab("compile_log");
+    } else {
+      setConsoleLogs([]);
+      setUtilPanelTab("console");
+      preview();
+    }
   };
 
   const renderNavBar = () => {
@@ -43,8 +59,6 @@ function App() {
           <li className="example-selector">
             <Examples />
           </li>
-        </ul>
-        <ul>
           <li>
             <button id="run" onClick={run}>
               Run
