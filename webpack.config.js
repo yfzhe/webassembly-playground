@@ -38,7 +38,10 @@ const baseConfig = {
     new NodePolyfillWebpackPlugin({
       onlyAliases: ["path"],
     }),
-    new MonacoWebpackPlugin(),
+    new MonacoWebpackPlugin({
+      languages: [],
+      features: ["html", "javascript"],
+    }),
     new ExamplesPlugin(),
     new HtmlWebpackPlugin({
       filename: "index.html",

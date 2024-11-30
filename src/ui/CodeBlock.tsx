@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import * as monaco from "monaco-editor";
+import { editor as monacoEditor } from "monaco-editor";
 
 export type CodeBlockProps = {
   filename: string;
@@ -7,12 +7,12 @@ export type CodeBlockProps = {
 };
 
 export type CodeBlockRef = {
-  getEditor(): monaco.editor.IStandaloneCodeEditor | null;
+  getEditor(): monacoEditor.IStandaloneCodeEditor | null;
 };
 
 const CodeBlock = forwardRef<CodeBlockRef, CodeBlockProps>(
   ({ filename, initialContent = "" }, ref) => {
-    const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+    const editorRef = useRef<monacoEditor.IStandaloneCodeEditor | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(ref, () => ({
@@ -20,7 +20,7 @@ const CodeBlock = forwardRef<CodeBlockRef, CodeBlockProps>(
     }));
 
     useEffect(() => {
-      const editor = monaco.editor.create(containerRef.current!, {
+      const editor = monacoEditor.create(containerRef.current!, {
         value: initialContent,
         automaticLayout: true,
         minimap: { enabled: false },
