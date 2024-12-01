@@ -86,8 +86,11 @@ const MIME_MAP: Record<string, string> = {
 self.addEventListener("fetch", (evt) => {
   const url = new URL(evt.request.url);
 
-  if (url.origin === self.origin && url.pathname.startsWith("/preview")) {
-    const filename = url.pathname.substring(9); // remove "/preview/"
+  if (url.origin === self.origin) {
+    const match = /\/preview\/(.+)$/.exec(url.pathname);
+    if (!match) return;
+
+    const filename = match[1] as string;
     const content = fileStorage.get(filename);
     if (content) {
       const ext = path.extname(filename);
