@@ -5,7 +5,8 @@ import type { CompileLog } from "../service/lib";
 import type { File } from "../types";
 import examples from "../examples/index.json";
 
-export const filesAtom = atom<Array<File>>(examples[0]!.files);
+// Use the example "add" as default
+export const filesAtom = atom<Array<File>>(examples[1]!.files);
 
 export const consoleLogsAtom = atom<Array<ConsoleMessage>>([]);
 

@@ -10,7 +10,7 @@ const TARGET_PATH = "./src/examples/index.json";
 async function generateExamples() {
   const subdirs = await readdir(SOURCE_PATH);
   const examples = await Promise.all(subdirs.map(generateExample));
-  return examples.filter(Boolean);
+  return examples.filter(Boolean).sort((a, b) => a.index - b.index);
 }
 
 async function generateExample(dir) {
@@ -19,10 +19,22 @@ async function generateExample(dir) {
   const stat = await lstat(path);
   if (!stat.isDirectory()) return null;
 
+  const matched = /^(\d+)-(.+)$/.exec(dir);
+  if (!matched)
+    throw new Error(
+      `directory's name doesn't follow the schema \`42-some-words\`: ${dir}`,
+    );
+  const [_, index, title] = matched;
+
   const filenames = await readdir(path);
   const wats = await extractFiles(path, filenames, ".wat");
   const jss = await extractFiles(path, filenames, ".js");
-  return { title: dir, files: wats.concat(jss) };
+
+  return {
+    index: parseInt(index),
+    title: title.replaceAll("-", " "),
+    files: wats.concat(jss),
+  };
 }
 
 function extractFiles(basePath, files, ext) {
