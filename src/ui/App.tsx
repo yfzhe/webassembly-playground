@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 
 import type { File } from "../types";
@@ -24,12 +24,16 @@ const GITHUB_REPO_URL = "https://github.com/yfzhe/webassembly-playground";
 function App() {
   const files = useAtomValue(filesAtom);
   const features = useAtomValue(featuresAtom);
-  const preview = useSetAtom(previewIdAtom);
+  const setPreviewId = useSetAtom(previewIdAtom);
   const setConsoleLogs = useSetAtom(consoleLogsAtom);
   const setCompileLogs = useSetAtom(compileLogsAtom);
   const setUtilPanelTab = useSetAtom(utilPanelTabAtom);
 
   const codeBlocksRef = useRef(new Map<string, CodeBlockRef>());
+
+  const preview = useCallback(() => {
+    setPreviewId((id) => id + 1);
+  }, [setPreviewId]);
 
   const run = async () => {
     const sw = navigator.serviceWorker.controller;
