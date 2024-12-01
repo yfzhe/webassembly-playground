@@ -1,4 +1,5 @@
 import { useAtom, useAtomValue } from "jotai";
+import cx from "classnames";
 import { Console } from "console-feed";
 
 import {
@@ -21,7 +22,11 @@ function UtilPanel() {
 
   const renderTab = (tab: UtilPanelTab) => {
     return (
-      <div key={tab} className="tab" onClick={() => setCurTab(tab)}>
+      <div
+        key={tab}
+        className={cx("util-panel-tab", { active: tab === curTab })}
+        onClick={() => setCurTab(tab)}
+      >
         {TAB_TITLES[tab]}
       </div>
     );
@@ -30,11 +35,7 @@ function UtilPanel() {
   const renderContent = () => {
     switch (curTab) {
       case "console": {
-        return (
-          <div className="console-log">
-            <Console logs={consoleLogs} />
-          </div>
-        );
+        return <Console logs={consoleLogs} />;
       }
 
       case "compile_log": {
@@ -42,13 +43,9 @@ function UtilPanel() {
         const log = compileLogs[0];
 
         return (
-          <div className="compile-log">
-            {log && (
-              <pre>
-                <code>{log.log}</code>
-              </pre>
-            )}
-          </div>
+          <pre className="compile-log">
+            <code>{log?.log}</code>
+          </pre>
         );
       }
     }
@@ -56,10 +53,10 @@ function UtilPanel() {
 
   return (
     <div className="util-panel">
-      <div className="tabs">
+      <div className="util-panel-tabs">
         {(Object.keys(TAB_TITLES) as Array<UtilPanelTab>).map(renderTab)}
       </div>
-      {renderContent()}
+      <div className="util-panel-content">{renderContent()}</div>
     </div>
   );
 }

@@ -13,7 +13,7 @@ import {
 } from "../state";
 
 import CodeBlock, { type CodeBlockRef } from "./CodeBlock";
-import Examples from "./Examples";
+import ExampleSelector from "./ExampleSelector";
 import Preview from "./Preview";
 import UtilPanel from "./UtilPanel";
 import "../style.css";
@@ -56,13 +56,13 @@ function App() {
     return (
       <nav className="navbar">
         <ul className="nav">
-          <li className="example-selector">
-            <Examples />
+          <li>
+            <ExampleSelector />
           </li>
           <li>
-            <button id="run" onClick={run}>
+            <div className="nav-item" onClick={run}>
               Run
-            </button>
+            </div>
           </li>
         </ul>
       </nav>
@@ -91,11 +91,9 @@ function App() {
     <>
       <header className="site-header">
         <h1 className="title">WebAssembly Playground</h1>
-        <div>
-          <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">
-            <GitHub />
-          </a>
-        </div>
+        <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">
+          <GitHub />
+        </a>
       </header>
       {renderNavBar()}
       <main className="main">
