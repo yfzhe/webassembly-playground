@@ -1,15 +1,20 @@
 import { useSetAtom } from "jotai";
 
 import type { Example } from "../types";
-import { filesAtom } from "../state";
+import { featuresAtom, filesAtom } from "../state";
 import Dropdown from "./Dropdown";
 import examples from "../examples/index.json";
 
-function ExampleSelector() {
+function Examples() {
   const setFiles = useSetAtom(filesAtom);
+  const setFeatures = useSetAtom(featuresAtom);
 
   const selectExample = (example: Example) => () => {
     setFiles(example.files);
+
+    if (example.features) {
+      setFeatures(example.features);
+    }
   };
 
   return (
@@ -32,4 +37,4 @@ function ExampleSelector() {
   );
 }
 
-export default ExampleSelector;
+export default Examples;

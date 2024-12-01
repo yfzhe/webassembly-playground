@@ -22,22 +22,24 @@ async function generateExample(dir) {
   const matched = /^(\d+)-(.+)$/.exec(dir);
   if (!matched)
     throw new Error(
-      `directory's name doesn't follow the schema \`42-some-words\`: ${dir}`,
+      `directory's name doesn't follow the schema \`42-title\`: ${dir}`,
     );
   const [_, index, title] = matched;
 
   const filenames = await readdir(path);
   const wats = await extractFiles(path, filenames, ".wat");
   const jss = await extractFiles(path, filenames, ".js");
+  const metadata = await extractMetadata(path);
 
   return {
     index: parseInt(index),
-    title: title.replaceAll("-", " "),
+    title: metadata?.title ?? title,
     files: wats.concat(jss),
+    features: metadata?.features ?? null,
   };
 }
 
-function extractFiles(basePath, files, ext) {
+async function extractFiles(basePath, files, ext) {
   return Promise.all(
     files
       .filter((f) => extname(f) === ext)
@@ -46,6 +48,15 @@ function extractFiles(basePath, files, ext) {
         content: await readFile(resolve(basePath, filename), "utf-8"),
       })),
   );
+}
+
+async function extractMetadata(basePath) {
+  try {
+    const json = await readFile(resolve(basePath, "metadata.json"), "utf-8");
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
 }
 
 class ExamplesPlugin {

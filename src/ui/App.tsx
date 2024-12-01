@@ -14,7 +14,7 @@ import {
 } from "../state";
 
 import CodeBlock, { type CodeBlockRef } from "./CodeBlock";
-import ExampleSelector from "./ExampleSelector";
+import Examples from "./Examples";
 import Preview from "./Preview";
 import UtilPanel from "./UtilPanel";
 import "../style.css";
@@ -60,7 +60,7 @@ function App() {
       <nav className="navbar">
         <ul className="nav">
           <li>
-            <ExampleSelector />
+            <Examples />
           </li>
           <li>
             <Features />
