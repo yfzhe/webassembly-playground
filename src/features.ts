@@ -87,7 +87,7 @@ export const WASM_FEATURES_LIST = [
     isDefault: false,
   },
   {
-    name: "extended_const",
+    name: "extended const",
     flag: "extended_const",
     isDefault: false,
   },
