@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Decode, Hook, Unhook } from "console-feed";
 import type { HookedConsole } from "console-feed/lib/definitions/Console";
@@ -20,9 +20,7 @@ function Preview() {
       (log) => setConsoleLogs((logs) => [...logs, Decode(log)]);
 
     if (iframe) {
-      iframe.addEventListener("load", () => {
-        hooked = Hook(iframe.contentWindow!.window.console, appendConsoleLogs);
-      });
+      hooked = Hook(iframe.contentWindow!.window.console, appendConsoleLogs);
     }
 
     return () => {
@@ -41,4 +39,4 @@ function Preview() {
   );
 }
 
-export default Preview;
+export default memo(Preview);
