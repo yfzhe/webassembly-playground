@@ -2,6 +2,7 @@
   box-sizing: border-box;
   --color-primary: #654ff0;
   --color-gray: #e2e2e2;
+  --color-gray-dark: #999;
 }
 
 button {
@@ -30,6 +31,7 @@ button {
 
 .site-header a {
   color: white;
+  text-decoration: none;
 }
 
 .navbar {
@@ -113,7 +115,7 @@ button {
 }
 
 .example-option {
-  min-width: 160px;
+  min-width: 168px;
 }
 
 .wasm-feature {
@@ -159,12 +161,25 @@ button {
 .preview {
   grid-column: 2 / 3;
   grid-row: 1 / 2;
+  position: relative;
+}
+
+.preview::before {
+  content: "Preview";
+  z-index: -1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  color: var(--color-gray-dark);
 }
 
 .preview > iframe {
   width: 100%;
   height: 100%;
   border: none;
+  background-color: white;
 }
 
 .util-panel {
@@ -184,7 +199,7 @@ button {
   font-weight: 700;
   line-height: 24px;
   padding-bottom: 4px;
-  color: #999;
+  color: var(--color-gray-dark);
   cursor: pointer;
 }
 .util-panel-tab.active {

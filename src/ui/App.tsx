@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { GitHub } from "react-feather";
 
 import type { File } from "../types";
 import { compile } from "../service/lib";
@@ -98,7 +97,7 @@ function App() {
       <header className="site-header">
         <h1 className="title">WebAssembly Playground</h1>
         <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">
-          <GitHub />
+          GitHub
         </a>
       </header>
       {renderNavBar()}
