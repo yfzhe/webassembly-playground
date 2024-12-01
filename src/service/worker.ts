@@ -10,24 +10,33 @@ import path from "path";
 import { MessageType, type CompileLog, type Message } from "./lib";
 import type { File } from "../types";
 import type { WasmFeatures } from "../features";
+import { assert } from "../util";
 
-let wabt: Awaited<ReturnType<typeof initWabt>>;
+let wabt: Awaited<ReturnType<typeof initWabt>> | undefined;
 
 const fileStorage: Map<string, string | Uint8Array> = new Map();
 
+async function setupWabt() {
+  return initWabt().then((_wabt) => {
+    wabt = _wabt;
+  });
+}
+
 self.addEventListener("install", (evt) => {
-  evt.waitUntil(
-    initWabt().then((_wabt) => {
-      wabt = _wabt;
-    }),
-  );
+  self.skipWaiting();
+  evt.waitUntil(setupWabt());
 });
 
-self.addEventListener("activate", (evt) => {
+self.addEventListener("activate", () => {
   self.clients.claim();
 });
 
-function compile(files: Array<File>, features: WasmFeatures) {
+async function compile(files: Array<File>, features: WasmFeatures) {
+  if (!wabt) {
+    await setupWabt();
+  }
+  assert(wabt);
+
   fileStorage.clear();
 
   let logs: Array<CompileLog> = [];
@@ -63,14 +72,14 @@ function compile(files: Array<File>, features: WasmFeatures) {
   return logs;
 }
 
-self.addEventListener("message", (evt) => {
+self.addEventListener("message", async (evt) => {
   const message = evt.data as Message;
 
   let result: unknown;
 
   switch (message.type) {
     case MessageType.Compile: {
-      result = compile(message.files, message.features);
+      result = await compile(message.files, message.features);
       break;
     }
   }

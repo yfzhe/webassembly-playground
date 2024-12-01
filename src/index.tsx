@@ -5,7 +5,7 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register(
     new URL(
       /* webpackChunkName: "service-worker" */
-      "./service/index.ts",
+      "./service/worker.ts",
       import.meta.url,
     ),
     { scope: "./" },
