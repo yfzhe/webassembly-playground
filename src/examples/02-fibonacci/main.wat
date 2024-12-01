@@ -1,14 +1,14 @@
 (module
-  (func $fib_naive (export "fib") (param i32) (result i32)
+  (func $fib_naive (export "fib") (param i32) (result i64)
     (block
       (block
         (block
           (local.get 0)
           (br_table 0 1 2))
-        (i32.const 1)
+        (i64.const 1)
         (return))
 
-      (i32.const 1)
+      (i64.const 1)
       (return))
 
     (local.get 0)
@@ -21,4 +21,4 @@
     i32.sub
     call $fib_naive
 
-    i32.add))
+    i64.add))

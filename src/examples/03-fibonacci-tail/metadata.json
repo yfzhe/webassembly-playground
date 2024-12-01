@@ -1,0 +1,6 @@
+{
+  "title": "fibonacci (tail call)",
+  "features": {
+    "tail_call": true
+  }
+}
