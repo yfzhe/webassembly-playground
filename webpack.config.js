@@ -54,6 +54,9 @@ const baseConfig = {
       chunks: [],
     }),
   ],
+  cache: {
+    type: "filesystem",
+  },
   output: {
     filename: "[name].js",
     path: path.resolve(import.meta.dirname, "dist"),
