@@ -1,3 +1,4 @@
+import type { WasmFeatures } from "../features";
 import type { File } from "../types";
 
 export enum MessageType {
@@ -7,6 +8,7 @@ export enum MessageType {
 export type Message = {
   type: MessageType.Compile;
   files: Array<File>;
+  features: WasmFeatures;
 };
 
 export type CompileLog = {
@@ -29,9 +31,11 @@ function postMessageToWorker<R>(
 export async function compile(
   sw: ServiceWorker,
   files: Array<File>,
+  features: WasmFeatures,
 ): Promise<Array<CompileLog>> {
   return postMessageToWorker<Array<CompileLog>>(sw, {
     type: MessageType.Compile,
     files,
+    features,
   });
 }

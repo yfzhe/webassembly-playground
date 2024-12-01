@@ -21,7 +21,7 @@ function ExampleSelector() {
         return (
           <div
             key={title}
-            className="examples-option"
+            className="dropdown-menu-item example-option"
             onClick={selectExample(example)}
           >
             {title}

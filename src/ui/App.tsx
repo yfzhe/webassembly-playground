@@ -7,6 +7,7 @@ import { compile } from "../service/lib";
 import {
   compileLogsAtom,
   consoleLogsAtom,
+  featuresAtom,
   filesAtom,
   previewIdAtom,
   utilPanelTabAtom,
@@ -17,11 +18,13 @@ import ExampleSelector from "./ExampleSelector";
 import Preview from "./Preview";
 import UtilPanel from "./UtilPanel";
 import "../style.css";
+import Features from "./Features";
 
 const GITHUB_REPO_URL = "https://github.com/yfzhe/webassembly-playground";
 
 function App() {
   const files = useAtomValue(filesAtom);
+  const features = useAtomValue(featuresAtom);
   const preview = useSetAtom(previewIdAtom);
   const setConsoleLogs = useSetAtom(consoleLogsAtom);
   const setCompileLogs = useSetAtom(compileLogsAtom);
@@ -40,7 +43,7 @@ function App() {
       }),
     );
 
-    const logs = await compile(sw, files);
+    const logs = await compile(sw, files, features);
     setCompileLogs(logs);
 
     if (logs.some((log) => log.result === "err")) {
@@ -58,6 +61,9 @@ function App() {
         <ul className="nav">
           <li>
             <ExampleSelector />
+          </li>
+          <li>
+            <Features />
           </li>
           <li>
             <div className="nav-item" onClick={run}>

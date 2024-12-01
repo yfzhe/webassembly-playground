@@ -3,10 +3,19 @@ import type { Message as ConsoleMessage } from "console-feed/lib/definitions/Com
 
 import type { CompileLog } from "../service/lib";
 import type { File } from "../types";
+import { WASM_FEATURES_LIST, type WasmFeatures } from "../features";
 import examples from "../examples/index.json";
 
 // Use the example "add" as default
 export const filesAtom = atom<Array<File>>(examples[1]!.files);
+
+const defaultFeatures: WasmFeatures = Object.fromEntries(
+  WASM_FEATURES_LIST.filter((feat) => feat.isDefault).map((feat) => [
+    feat.flag,
+    true,
+  ]),
+);
+export const featuresAtom = atom<WasmFeatures>(defaultFeatures);
 
 export const consoleLogsAtom = atom<Array<ConsoleMessage>>([]);
 

@@ -9,10 +9,11 @@ import initWabt from "wabt";
 import path from "path";
 import { MessageType, type CompileLog, type Message } from "./lib";
 import type { File } from "../types";
+import type { WasmFeatures } from "../features";
 
 let wabt: Awaited<ReturnType<typeof initWabt>>;
 
-const cache: Map<string, string | Uint8Array> = new Map();
+const fileStorage: Map<string, string | Uint8Array> = new Map();
 
 self.addEventListener("install", (evt) => {
   evt.waitUntil(
@@ -24,8 +25,8 @@ self.addEventListener("install", (evt) => {
 
 self.addEventListener("activate", (evt) => {});
 
-function compile(files: Array<File>) {
-  cache.clear();
+function compile(files: Array<File>, features: WasmFeatures) {
+  fileStorage.clear();
 
   let logs: Array<CompileLog> = [];
 
@@ -36,12 +37,12 @@ function compile(files: Array<File>) {
     switch (ext) {
       case ".wat": {
         try {
-          const module = wabt.parseWat(filename, content, {});
+          const module = wabt.parseWat(filename, content, features);
           module.validate();
           const result = module.toBinary({ log: true });
 
           const wasmFilename = `${path.basename(filename, ext)}.wasm`;
-          cache.set(wasmFilename, result.buffer);
+          fileStorage.set(wasmFilename, result.buffer);
 
           logs.push({ filename, result: "ok", log: result.log });
         } catch (e) {
@@ -51,7 +52,7 @@ function compile(files: Array<File>) {
       }
 
       case ".js": {
-        cache.set(filename, content);
+        fileStorage.set(filename, content);
         break;
       }
     }
@@ -67,7 +68,7 @@ self.addEventListener("message", (evt) => {
 
   switch (message.type) {
     case MessageType.Compile: {
-      result = compile(message.files);
+      result = compile(message.files, message.features);
       break;
     }
   }
@@ -85,7 +86,7 @@ self.addEventListener("fetch", (evt) => {
 
   if (url.origin === self.origin && url.pathname.startsWith("/preview")) {
     const filename = url.pathname.substring(9); // remove "/preview/"
-    const content = cache.get(filename);
+    const content = fileStorage.get(filename);
     if (content) {
       const ext = path.extname(filename);
       const headers = new Headers();

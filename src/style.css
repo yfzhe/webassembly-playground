@@ -100,15 +100,27 @@ button {
   border: 1px solid var(--color-gray);
   border-top: 0;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.075);
+  max-height: 300px;
+  overflow-y: auto;
 }
 
-.examples-option {
-  min-width: 120px;
+.dropdown-menu-item {
   padding: 8px 12px;
   cursor: pointer;
 }
-.examples-option:not(:last-child) {
+.dropdown-menu-item:not(:last-child) {
   border-bottom: 1px solid var(--color-gray);
+}
+
+.example-option {
+  min-width: 160px;
+}
+
+.wasm-feature {
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .main {
