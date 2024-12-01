@@ -45,7 +45,6 @@
     "monaco-editor": "^0.52.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-feather": "^2.0.10",
-    "wabt": "^1.0.32"
+    "wabt": "1.0.32"
   }
 }
