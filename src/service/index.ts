@@ -23,7 +23,9 @@ self.addEventListener("install", (evt) => {
   );
 });
 
-self.addEventListener("activate", (evt) => {});
+self.addEventListener("activate", (evt) => {
+  self.clients.claim();
+});
 
 function compile(files: Array<File>, features: WasmFeatures) {
   fileStorage.clear();
