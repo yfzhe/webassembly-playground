@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { lazy, Suspense, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 
 import type { File } from "../types";
@@ -12,14 +12,16 @@ import {
   utilPanelTabAtom,
 } from "../state";
 
-import CodeBlock, { type CodeBlockRef } from "./CodeBlock";
+import { type CodeBlockRef } from "./CodeBlock";
 import Examples from "./Examples";
+import Features from "./Features";
 import Preview from "./Preview";
 import UtilPanel from "./UtilPanel";
 import "../style.css";
-import Features from "./Features";
 
 const GITHUB_REPO_URL = "https://github.com/yfzhe/webassembly-playground";
+
+const CodeBlock = lazy(() => import("./CodeBlock"));
 
 function App() {
   const files = useAtomValue(filesAtom);
@@ -31,9 +33,9 @@ function App() {
 
   const codeBlocksRef = useRef(new Map<string, CodeBlockRef>());
 
-  const preview = useCallback(() => {
+  const preview = () => {
     setPreviewId((id) => id + 1);
-  }, [setPreviewId]);
+  };
 
   const run = async () => {
     const sw = navigator.serviceWorker.controller;
@@ -56,6 +58,10 @@ function App() {
       setUtilPanelTab("console");
       preview();
     }
+  };
+
+  const renderLoading = () => {
+    return <div className="main-loading">Loading...</div>;
   };
 
   const renderNavBar = () => {
@@ -104,11 +110,13 @@ function App() {
           GitHub
         </a>
       </header>
-      {renderNavBar()}
       <main className="main">
-        <div className="editors">{files.map(renderFileCodeBlock)}</div>
-        <Preview />
-        <UtilPanel />
+        <Suspense fallback={renderLoading()}>
+          {renderNavBar()}
+          <div className="editors">{files.map(renderFileCodeBlock)}</div>
+          <Preview />
+          <UtilPanel />
+        </Suspense>
       </main>
     </>
   );
