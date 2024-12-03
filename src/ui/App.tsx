@@ -12,7 +12,7 @@ import {
   utilPanelTabAtom,
 } from "../state";
 
-import { type CodeBlockRef } from "./CodeBlock";
+import type { EditorRef } from "./Editor";
 import Examples from "./Examples";
 import Features from "./Features";
 import Preview from "./Preview";
@@ -21,7 +21,7 @@ import "../style.css";
 
 const GITHUB_REPO_URL = "https://github.com/yfzhe/webassembly-playground";
 
-const CodeBlock = lazy(() => import("./CodeBlock"));
+const Editor = lazy(() => import("./Editor"));
 
 function App() {
   const files = useAtomValue(filesAtom);
@@ -31,7 +31,7 @@ function App() {
   const setCompileLogs = useSetAtom(compileLogsAtom);
   const setUtilPanelTab = useSetAtom(utilPanelTabAtom);
 
-  const codeBlocksRef = useRef(new Map<string, CodeBlockRef>());
+  const codeBlocksRef = useRef(new Map<string, EditorRef>());
 
   const preview = () => {
     setPreviewId((id) => id + 1);
@@ -87,18 +87,19 @@ function App() {
   const renderFileCodeBlock = (file: File) => {
     const { filename, content } = file;
     return (
-      <CodeBlock
-        key={filename}
-        filename={filename}
-        initialContent={content}
-        ref={(node) => {
-          if (node) {
-            codeBlocksRef.current.set(filename, node);
-          } else {
-            codeBlocksRef.current.delete(filename);
-          }
-        }}
-      />
+      <div key={filename} className="block">
+        <div className="block-header">{filename}</div>
+        <Editor
+          initialContent={content}
+          ref={(node) => {
+            if (node) {
+              codeBlocksRef.current.set(filename, node);
+            } else {
+              codeBlocksRef.current.delete(filename);
+            }
+          }}
+        />
+      </div>
     );
   };
 
@@ -110,7 +111,7 @@ function App() {
           GitHub
         </a>
       </header>
-      <main className="main">
+      <main className="app-main">
         <Suspense fallback={renderLoading()}>
           {renderNavBar()}
           <div className="editors">{files.map(renderFileCodeBlock)}</div>

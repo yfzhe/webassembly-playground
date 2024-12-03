@@ -40,7 +40,6 @@ const baseConfig = {
     }),
     new MonacoWebpackPlugin({
       languages: [],
-      features: ["html", "javascript"],
     }),
     new ExamplesPlugin(),
     new HtmlWebpackPlugin({
