@@ -3,6 +3,7 @@
   --color-primary: #654ff0;
   --color-gray: #e2e2e2;
   --color-gray-dark: #999;
+  --site-header-height: 72px;
 }
 
 html {
@@ -19,7 +20,7 @@ button {
 }
 
 .site-header {
-  height: 72px;
+  height: var(--site-header-height);
   padding: 10px 18px;
   background-color: var(--color-primary);
   color: white;
@@ -38,11 +39,11 @@ button {
   text-decoration: none;
 }
 
-.main {
-  height: calc(100% - 80px);
+.app-main {
+  height: calc(100% - var(--site-header-height));
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 48px 1fr 1fr;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 48px 1fr minmax(0, 1fr);
 }
 
 .main-loading {
@@ -50,9 +51,7 @@ button {
   grid-row: 1 / 4;
   font-size: 20px;
   font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  place-self: center center;
 }
 
 .navbar {
