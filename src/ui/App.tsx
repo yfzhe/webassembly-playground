@@ -87,8 +87,8 @@ function App() {
   const renderFileCodeBlock = (file: File) => {
     const { filename, content } = file;
     return (
-      <div key={filename} className="block">
-        <div className="block-header">{filename}</div>
+      <div key={filename} className="code-block">
+        <div className="code-block-header">{filename}</div>
         <Editor
           initialContent={content}
           ref={(node) => {
