@@ -4,8 +4,8 @@ import VirtualModulesPlugin from "webpack-virtual-modules";
 
 // TODO: watch /examples directory
 
-const SOURCE_PATH = "./src/examples";
-const TARGET_PATH = "./src/examples/index.json";
+const SOURCE_PATH = "../webassembly-playground/src/examples";
+const TARGET_PATH = "../webassembly-playground/src/examples/index.json";
 
 async function generateExamples() {
   const subdirs = await readdir(SOURCE_PATH);

@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "esnext",
     "lib": ["esnext", "dom"],
-    "jsx": "react-jsx",
     "skipLibCheck": true,
 
     "strict": true,
@@ -10,8 +9,6 @@
 
     "module": "esnext",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true,
-    "allowArbitraryExtensions": true,
+    "verbatimModuleSyntax": true
   },
-  "include": ["src"],
 }

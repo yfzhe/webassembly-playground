@@ -1,0 +1,12 @@
+{
+  "name": "examples-plugin",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A Webpack plugin to generate examples data.",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "webpack-virtual-modules": "^0.6.2"
+  }
+}

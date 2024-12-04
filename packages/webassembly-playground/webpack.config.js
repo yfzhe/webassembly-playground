@@ -4,7 +4,7 @@ import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import NodePolyfillWebpackPlugin from "node-polyfill-webpack-plugin";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
-import ExamplesPlugin from "./webpack/examples-plugin.js";
+import ExamplesPlugin from "examples-plugin";
 
 /** @type {import("webpack").Configuration} */
 const baseConfig = {
