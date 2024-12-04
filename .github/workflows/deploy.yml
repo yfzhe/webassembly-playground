@@ -13,20 +13,25 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
-      - name: setup node
+      - name: install node
         uses: actions/setup-node@v4
         with:
-            node-version: "22"
+            node-version-file: ".nvmrc"
+
+      - name: install pnpm
+        run: |
+          corepack enable
+          corepack install
 
       - name: install dependencies
-        run: npm install
+        run: pnpm install
 
       - name: build
-        run: npm run build
+        run: pnpm --filter "webassembly-playground" run build
 
       - name: deploy to github pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./packages/webassembly-playground/dist
           publish_branch: gh-pages
