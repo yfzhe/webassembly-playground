@@ -41,7 +41,10 @@ const baseConfig = {
     new MonacoWebpackPlugin({
       languages: [],
     }),
-    new ExamplesPlugin(),
+    new ExamplesPlugin({
+      source: "src/examples",
+      target: "src/examples/index.json",
+    }),
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "src/index.html",

@@ -4,17 +4,16 @@ import VirtualModulesPlugin from "webpack-virtual-modules";
 
 // TODO: watch /examples directory
 
-const SOURCE_PATH = "../webassembly-playground/src/examples";
-const TARGET_PATH = "../webassembly-playground/src/examples/index.json";
-
-async function generateExamples() {
-  const subdirs = await readdir(SOURCE_PATH);
-  const examples = await Promise.all(subdirs.map(generateExample));
+async function generateExamples(source) {
+  const subdirs = await readdir(source);
+  const examples = await Promise.all(
+    subdirs.map((dir) => generateExample(source, dir)),
+  );
   return examples.filter(Boolean).sort((a, b) => a.index - b.index);
 }
 
-async function generateExample(dir) {
-  const path = resolve(SOURCE_PATH, dir);
+async function generateExample(source, dir) {
+  const path = resolve(source, dir);
 
   const stat = await lstat(path);
   if (!stat.isDirectory()) return null;
@@ -35,7 +34,7 @@ async function generateExample(dir) {
     index: parseInt(index),
     title: metadata?.title ?? title,
     files: wats.concat(jss),
-    features: metadata?.features ?? null,
+    features: metadata?.features,
   };
 }
 
@@ -60,16 +59,24 @@ async function extractMetadata(basePath) {
 }
 
 class ExamplesPlugin {
+  constructor({ source, target }) {
+    this.source = source;
+    this.target = target;
+  }
+
   /**
    * @param {import("webpack").Compiler} compiler
    */
   apply(compiler) {
+    const sourcePath = resolve(compiler.context, this.source);
+    const targetPath = resolve(compiler.context, this.target);
+
     const virtual = new VirtualModulesPlugin();
     virtual.apply(compiler);
 
     compiler.hooks.compilation.tap("ExamplesPlugin", async (compilation) => {
-      const examples = await generateExamples();
-      virtual.writeModule(TARGET_PATH, JSON.stringify(examples));
+      const examples = await generateExamples(sourcePath);
+      virtual.writeModule(targetPath, JSON.stringify(examples));
     });
   }
 }
