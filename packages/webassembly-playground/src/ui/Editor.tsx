@@ -21,6 +21,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(({ initialContent }, ref) => {
     const editor = monaco.editor.create(containerRef.current!, {
       value: initialContent,
       automaticLayout: true,
+      tabSize: 2,
       minimap: { enabled: false },
     });
     editorRef.current = editor;
