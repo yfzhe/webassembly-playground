@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import cx from "classnames";
+import cx from "clsx";
 
 type DropdownProps = {
   entry: ReactNode;
