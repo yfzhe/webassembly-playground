@@ -65,6 +65,8 @@ function getLanguageByFileName(filename?: string) {
   switch (ext) {
     case "wat":
       return "wat";
+    case "js":
+      return "javascript";
     default:
       return "plaintext";
   }
