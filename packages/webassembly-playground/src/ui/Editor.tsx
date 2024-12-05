@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import * as monaco from "monaco-editor";
+import { getLanguageByFileName } from "../util";
 
 export type EditorProps = {
   initialContent?: string;
@@ -20,10 +21,9 @@ const Editor = forwardRef<EditorRef, EditorProps>(
     }));
 
     useEffect(() => {
-      const language = getLanguageByFileName(filename);
       const editor = monaco.editor.create(containerRef.current!, {
         value: initialContent,
-        language,
+        language: getLanguageByFileName(filename),
         automaticLayout: true,
         tabSize: 2,
         minimap: { enabled: false },
@@ -40,15 +40,3 @@ const Editor = forwardRef<EditorRef, EditorProps>(
 );
 
 export default Editor;
-
-function getLanguageByFileName(filename?: string) {
-  const ext = filename?.split(".").pop();
-  switch (ext) {
-    case "wat":
-      return "wat";
-    case "js":
-      return "javascript";
-    default:
-      return "plaintext";
-  }
-}
