@@ -28,8 +28,113 @@ impl LanguageServer {
         Ok(())
     }
 
+    #[wasm_bindgen(js_name = "callHierarchyIncomingCalls")]
+    pub fn call_hierarchy_incoming_calls(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(
+            &self
+                .service
+                .call_hierarchy_incoming_calls(from_value(params)?),
+        )
+        .map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "callHierarchyOutgoingCalls")]
+    pub fn call_hierarchy_outgoing_calls(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(
+            &self
+                .service
+                .call_hierarchy_outgoing_calls(from_value(params)?),
+        )
+        .map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "codeAction")]
+    pub fn code_action(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.code_action(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen]
+    pub fn completion(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.completion(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "documentSymbol")]
+    pub fn document_symbol(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.document_symbol(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "findReferences")]
+    pub fn find_references(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.find_references(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "foldingRange")]
+    pub fn folding_range(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.folding_range(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen]
+    pub fn formatting(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.formatting(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "gotoDeclaration")]
+    pub fn goto_declaration(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.goto_declaration(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "gotoDefinition")]
+    pub fn goto_definition(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.goto_definition(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "gotoTypeDefinition")]
+    pub fn goto_type_definition(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.goto_type_definition(from_value(params)?)).map_err(JsValue::from)
+    }
+
     #[wasm_bindgen]
     pub fn hover(&self, params: JsValue) -> Result<JsValue, JsValue> {
         to_value(&self.service.hover(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "inlayHint")]
+    pub fn inlay_hint(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.inlay_hint(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "prepareCallHierarchy")]
+    pub fn prepare_call_hierarchy(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.prepare_call_hierarchy(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "prepareRename")]
+    pub fn prepare_rename(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.prepare_rename(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "pullDiagnostics")]
+    pub fn pull_diagnostics(&self, uri: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.pull_diagnostics(from_value(uri)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "rangeFormatting")]
+    pub fn range_formatting(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.range_formatting(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen]
+    pub fn rename(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.rename(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "semanticTokensFull")]
+    pub fn semantic_tokens_full(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.semantic_tokens_full(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "semanticTokensRange")]
+    pub fn semantic_tokens_range(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.semantic_tokens_range(from_value(params)?)).map_err(JsValue::from)
     }
 }

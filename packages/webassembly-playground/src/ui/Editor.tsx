@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import * as monaco from "monaco-editor";
 import { getLanguageByFileName } from "../util";
+import "../lsp";
 
 export type EditorProps = {
   initialContent?: string;
