@@ -3,7 +3,7 @@ import {
   MonacoToProtocolConverter,
   ProtocolToMonacoConverter,
 } from "@codingame/monaco-languageclient";
-import init, { LanguageServer } from "../../lsp/pkg/lsp";
+import init, { LanguageServer } from "../../../../lsp/pkg/lsp";
 
 monaco.languages.register({ id: "wat", extensions: [".wat"] });
 
