@@ -1,5 +1,5 @@
 import { useAtom, useAtomValue } from "jotai";
-import cx from "classnames";
+import cx from "clsx";
 import { Console } from "console-feed";
 
 import {

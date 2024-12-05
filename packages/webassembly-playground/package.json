@@ -39,7 +39,7 @@
     "webpack-merge": "^5.10.0"
   },
   "dependencies": {
-    "classnames": "^2.5.1",
+    "clsx": "^2.1.1",
     "console-feed": "^3.6.0",
     "jotai": "^2.10.3",
     "monaco-editor": "^0.52.0",
