@@ -1,6 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import * as monaco from "monaco-editor";
-import { startLanguageServer, type LanguageServerWrapper } from "../lsp";
 
 export type EditorProps = {
   initialContent?: string;
@@ -30,27 +29,9 @@ const Editor = forwardRef<EditorRef, EditorProps>(
         minimap: { enabled: false },
       });
       editorRef.current = editor;
-      let languageServer: LanguageServerWrapper | undefined;
-      if (language === "wat") {
-        (async () => {
-          languageServer = await startLanguageServer();
-          const model = editor.getModel();
-          if (model) {
-            languageServer.commit(model.uri.toString(), model.getValue());
-          }
-
-          editor.onDidChangeModelContent(() => {
-            const model = editor.getModel();
-            if (model) {
-              languageServer?.commit(model.uri.toString(), model.getValue());
-            }
-          });
-        })();
-      }
 
       return () => {
         editor.dispose();
-        languageServer?.dispose();
       };
     }, [initialContent]);
 

@@ -36,3 +36,15 @@ export async function startLanguageServer(): Promise<LanguageServerWrapper> {
     },
   };
 }
+
+const languageServerPromise = startLanguageServer();
+
+monaco.editor.onDidCreateModel(async (model) => {
+  if (model.getLanguageId() === "wat") {
+    const languageServer = await languageServerPromise;
+    languageServer.commit(model.uri.toString(), model.getValue());
+    model.onDidChangeContent(() => {
+      languageServer.commit(model.uri.toString(), model.getValue());
+    });
+  }
+});
