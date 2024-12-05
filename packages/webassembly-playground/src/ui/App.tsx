@@ -91,6 +91,7 @@ function App() {
         <div className="code-block-header">{filename}</div>
         <Editor
           initialContent={content}
+          filename={filename}
           ref={(node) => {
             if (node) {
               codeBlocksRef.current.set(filename, node);

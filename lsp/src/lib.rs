@@ -11,6 +11,7 @@ pub struct LanguageServer {
 impl LanguageServer {
     #[wasm_bindgen(constructor)]
     pub fn new() -> Self {
+        console_error_panic_hook::set_once();
         Self {
             service: LanguageService::default(),
         }
@@ -22,12 +23,8 @@ impl LanguageServer {
     }
 
     #[wasm_bindgen]
-    pub fn commit(&mut self, uri: String, content: String) -> Result<(), JsValue> {
-        self.service.commit(
-            uri.parse()
-                .map_err(|_| format!("failed to parse URI: {uri}"))?,
-            content,
-        );
+    pub fn commit(&mut self, uri: JsValue, content: String) -> Result<(), JsValue> {
+        self.service.commit(from_value(uri)?, content);
         Ok(())
     }
 

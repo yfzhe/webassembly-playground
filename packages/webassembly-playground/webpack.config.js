@@ -77,6 +77,9 @@ const baseConfig = {
       },
     },
   },
+  experiments: {
+    asyncWebAssembly: true,
+  },
 };
 
 export default function (env, argv) {
