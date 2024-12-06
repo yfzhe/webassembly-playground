@@ -1,10 +1,9 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import * as monaco from "monaco-editor";
-import { getLanguageByFileName } from "../util";
 
 export type EditorProps = {
   initialContent?: string;
-  filename?: string;
+  language?: string;
 };
 
 export type EditorRef = {
@@ -12,7 +11,7 @@ export type EditorRef = {
 };
 
 const Editor = forwardRef<EditorRef, EditorProps>(
-  ({ initialContent, filename }, ref) => {
+  ({ initialContent, language }, ref) => {
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -23,7 +22,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(
     useEffect(() => {
       const editor = monaco.editor.create(containerRef.current!, {
         value: initialContent,
-        language: getLanguageByFileName(filename),
+        language,
         automaticLayout: true,
         tabSize: 2,
         minimap: { enabled: false },
