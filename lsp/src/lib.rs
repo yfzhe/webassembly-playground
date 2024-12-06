@@ -1,4 +1,4 @@
-use serde_wasm_bindgen::{from_value, to_value};
+use serde_wasm_bindgen::from_value;
 use wasm_bindgen::prelude::*;
 use wat_service::LanguageService;
 
@@ -137,4 +137,10 @@ impl LanguageServer {
     pub fn semantic_tokens_range(&self, params: JsValue) -> Result<JsValue, JsValue> {
         to_value(&self.service.semantic_tokens_range(from_value(params)?)).map_err(JsValue::from)
     }
+}
+
+pub fn to_value<T: serde::ser::Serialize + ?Sized>(
+    value: &T,
+) -> Result<JsValue, serde_wasm_bindgen::Error> {
+    value.serialize(&serde_wasm_bindgen::Serializer::json_compatible())
 }

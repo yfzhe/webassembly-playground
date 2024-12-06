@@ -1,4 +1,4 @@
-import * as monaco from "monaco-editor";
+import type * as monaco from "monaco-editor";
 import {
   MonacoToProtocolConverter,
   ProtocolToMonacoConverter,
@@ -105,7 +105,7 @@ export async function startLanguageServer(): Promise<LanguageServerWrapper> {
     monaco.editor.setModelMarkers(
       model,
       "wat",
-      p2m.asDiagnostics(diagnostics.get("items")) ?? [],
+      p2m.asDiagnostics(diagnostics.items) ?? [],
     );
   }
   const completionProvider = monaco.languages.registerCompletionItemProvider(
