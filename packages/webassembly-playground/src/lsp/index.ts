@@ -6,6 +6,72 @@ import {
 import init, { LanguageServer } from "../../../../lsp/pkg/lsp";
 
 monaco.languages.register({ id: "wat", extensions: [".wat"] });
+monaco.languages.setMonarchTokensProvider("wat", {
+  brackets: [{ open: "(", close: ")", token: "delimiter.parenthesis" }],
+  keywords: [
+    "module",
+    "func",
+    "type",
+    "param",
+    "result",
+    "local",
+    "end",
+    "if",
+    "then",
+    "else",
+    "block",
+    "loop",
+    "data",
+    "elem",
+    "declare",
+    "export",
+    "global",
+    "memory",
+    "import",
+    "start",
+    "table",
+    "item",
+    "offset",
+    "mut",
+  ],
+  typeKeywords: ["i32", "i64", "f32", "f64", "v128", "funcref", "externref"],
+  tokenizer: {
+    root: [
+      [
+        /[a-z_$][\w.$]*/,
+        {
+          cases: {
+            "@typeKeywords": "type.identifier",
+            "@keywords": "keyword",
+            "@default": "operators",
+          },
+        },
+      ],
+      [/$[\w.$-_]+/, "variable.name"],
+      { include: "@whitespace" },
+      [/[()]/, "@brackets"],
+      [/\d*\.\d+([eE][\-+]?\d+)?/, "number.float"],
+      [/0[xX][0-9a-fA-F]+/, "number.hex"],
+      [/\d+/, "number"],
+      [/"([^"\\]|\\.)*$/, "string.invalid"],
+      [/"/, { token: "string.quote", bracket: "@open", next: "@string" }],
+    ],
+    comment: [
+      [/[^;)]+/, "comment"],
+      [/;\)/, "comment", "@pop"],
+      [/[;)]/, "comment"],
+    ],
+    string: [
+      [/[^\\"]+/, "string"],
+      [/"/, { token: "string.quote", bracket: "@close", next: "@pop" }],
+    ],
+    whitespace: [
+      [/[ \t\r\n]+/, "white"],
+      [/\(;/, "comment", "@comment"],
+      [/;;.*$/, "comment"],
+    ],
+  },
+});
 
 const m2p = new MonacoToProtocolConverter(monaco);
 const p2m = new ProtocolToMonacoConverter(monaco);
