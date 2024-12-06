@@ -19,6 +19,20 @@ export async function startLanguageServer(): Promise<LanguageServerWrapper> {
   await init();
   const languageServer = new LanguageServer();
 
+  const completionProvider = monaco.languages.registerCompletionItemProvider(
+    "wat",
+    {
+      triggerCharacters: ["$", "("],
+      provideCompletionItems(model, position, context) {
+        return p2m.asCompletionResult(
+          languageServer.completion(
+            m2p.asCompletionParams(model, position, context),
+          ),
+          undefined,
+        );
+      },
+    },
+  );
   const declarationProvider = monaco.languages.registerDeclarationProvider(
     "wat",
     {
@@ -127,6 +141,7 @@ export async function startLanguageServer(): Promise<LanguageServerWrapper> {
       });
     },
     dispose() {
+      completionProvider.dispose();
       declarationProvider.dispose();
       definitionProvider.dispose();
       documentSymbolProvider.dispose();
