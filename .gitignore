@@ -1,2 +1,7 @@
 node_modules/
 dist/
+target/
+**/*.rs.bk
+bin/
+pkg/
+wasm-pack.log

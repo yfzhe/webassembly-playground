@@ -39,7 +39,7 @@ const baseConfig = {
       onlyAliases: ["path"],
     }),
     new MonacoWebpackPlugin({
-      languages: [],
+      languages: ["typescript", "javascript"],
     }),
     new ExamplesPlugin({
       source: "src/examples",
@@ -76,6 +76,9 @@ const baseConfig = {
         },
       },
     },
+  },
+  experiments: {
+    asyncWebAssembly: true,
   },
 };
 

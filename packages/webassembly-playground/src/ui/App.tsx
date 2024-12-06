@@ -18,6 +18,7 @@ import Features from "./Features";
 import Preview from "./Preview";
 import UtilPanel from "./UtilPanel";
 import "../style.css";
+import { getLanguageByFileName } from "../util";
 
 const GITHUB_REPO_URL = "https://github.com/yfzhe/webassembly-playground";
 
@@ -91,6 +92,7 @@ function App() {
         <div className="code-block-header">{filename}</div>
         <Editor
           initialContent={content}
+          language={getLanguageByFileName(filename)}
           ref={(node) => {
             if (node) {
               codeBlocksRef.current.set(filename, node);

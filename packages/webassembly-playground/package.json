@@ -39,10 +39,13 @@
     "webpack-merge": "^5.10.0"
   },
   "dependencies": {
+    "@codingame/monaco-languageclient": "^0.17.4",
+    "@codingame/monaco-vscode-api": "^11.1.1",
     "clsx": "^2.1.1",
     "console-feed": "^3.6.0",
     "jotai": "^2.10.3",
     "monaco-editor": "^0.52.0",
+    "monaco-editor-wrapper": "^5.5.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "wabt": "1.0.32"

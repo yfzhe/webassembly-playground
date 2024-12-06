@@ -16,7 +16,10 @@ jobs:
       - name: install node
         uses: actions/setup-node@v4
         with:
-            node-version-file: ".nvmrc"
+          node-version-file: ".nvmrc"
+
+      - name: install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
       - name: install pnpm
         run: |
@@ -27,7 +30,11 @@ jobs:
         run: pnpm install
 
       - name: build
-        run: pnpm --filter "webassembly-playground" run build
+        run: |
+          cd lsp
+          wasm-pack build --no-pack --target web
+          cd ..
+          pnpm --filter "webassembly-playground" run build
 
       - name: deploy to github pages
         uses: peaceiris/actions-gh-pages@v3
