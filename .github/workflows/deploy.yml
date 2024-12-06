@@ -18,8 +18,7 @@ jobs:
         with:
           node-version-file: ".nvmrc"
 
-      - name: install wasm-pack
-        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      # GitHub actions runner has already installed rust toolchain.
 
       - name: install pnpm
         run: |
@@ -30,11 +29,7 @@ jobs:
         run: pnpm install
 
       - name: build
-        run: |
-          cd lsp
-          wasm-pack build --no-pack --target web
-          cd ..
-          pnpm --filter "webassembly-playground" run build
+        run: pnpm -r run build
 
       - name: deploy to github pages
         uses: peaceiris/actions-gh-pages@v3

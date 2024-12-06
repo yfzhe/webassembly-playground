@@ -48,7 +48,8 @@
     "monaco-editor-wrapper": "^5.5.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "wabt": "1.0.32"
+    "wabt": "1.0.32",
+    "wat-lsp": "workspace:*"
   },
   "browserslist": {
     "production": [

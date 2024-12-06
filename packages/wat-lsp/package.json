@@ -1,0 +1,17 @@
+{
+  "name": "wat-lsp",
+  "version": "0.0.0",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "import": "./pkg/lsp.js",
+      "types": "./pkg/lsp.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "wasm-pack build --no-pack --target web"
+  },
+  "devDependencies": {
+    "wasm-pack": "^0.13.1"
+  }
+}
