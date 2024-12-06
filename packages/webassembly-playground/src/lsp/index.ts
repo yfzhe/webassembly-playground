@@ -5,86 +5,109 @@ import {
 } from "@codingame/monaco-languageclient";
 import init, { LanguageServer } from "../../../../lsp/pkg/lsp";
 
-monaco.languages.register({ id: "wat", extensions: [".wat"] });
-monaco.languages.setMonarchTokensProvider("wat", {
-  brackets: [{ open: "(", close: ")", token: "delimiter.parenthesis" }],
-  keywords: [
-    "module",
-    "func",
-    "type",
-    "param",
-    "result",
-    "local",
-    "end",
-    "if",
-    "then",
-    "else",
-    "block",
-    "loop",
-    "data",
-    "elem",
-    "declare",
-    "export",
-    "global",
-    "memory",
-    "import",
-    "start",
-    "table",
-    "item",
-    "offset",
-    "mut",
-  ],
-  typeKeywords: ["i32", "i64", "f32", "f64", "v128", "funcref", "externref"],
-  tokenizer: {
-    root: [
-      [
-        /[a-z_$][\w.$]*/,
-        {
-          cases: {
-            "@typeKeywords": "type.identifier",
-            "@keywords": "keyword",
-            "@default": "operators",
-          },
-        },
-      ],
-      [/$[\w.$-_]+/, "variable.name"],
-      { include: "@whitespace" },
-      [/[()]/, "@brackets"],
-      [/\d*\.\d+([eE][\-+]?\d+)?/, "number.float"],
-      [/0[xX][0-9a-fA-F]+/, "number.hex"],
-      [/\d+/, "number"],
-      [/"([^"\\]|\\.)*$/, "string.invalid"],
-      [/"/, { token: "string.quote", bracket: "@open", next: "@string" }],
-    ],
-    comment: [
-      [/[^;)]+/, "comment"],
-      [/;\)/, "comment", "@pop"],
-      [/[;)]/, "comment"],
-    ],
-    string: [
-      [/[^\\"]+/, "string"],
-      [/"/, { token: "string.quote", bracket: "@close", next: "@pop" }],
-    ],
-    whitespace: [
-      [/[ \t\r\n]+/, "white"],
-      [/\(;/, "comment", "@comment"],
-      [/;;.*$/, "comment"],
-    ],
-  },
-});
-
-const m2p = new MonacoToProtocolConverter(monaco);
-const p2m = new ProtocolToMonacoConverter(monaco);
-
 export type LanguageServerWrapper = monaco.IDisposable & {
   commit(uri: string, content: string): void;
   pullDiagnostics(model: monaco.editor.ITextModel): any;
 };
 
 export async function startLanguageServer(): Promise<LanguageServerWrapper> {
-  await init();
+  const [monaco] = await Promise.all([import("monaco-editor"), init()]);
   const languageServer = new LanguageServer();
 
+  monaco.languages.register({ id: "wat", extensions: [".wat"] });
+  monaco.languages.setMonarchTokensProvider("wat", {
+    brackets: [{ open: "(", close: ")", token: "delimiter.parenthesis" }],
+    keywords: [
+      "module",
+      "func",
+      "type",
+      "param",
+      "result",
+      "local",
+      "end",
+      "if",
+      "then",
+      "else",
+      "block",
+      "loop",
+      "data",
+      "elem",
+      "declare",
+      "export",
+      "global",
+      "memory",
+      "import",
+      "start",
+      "table",
+      "item",
+      "offset",
+      "mut",
+    ],
+    typeKeywords: ["i32", "i64", "f32", "f64", "v128", "funcref", "externref"],
+    tokenizer: {
+      root: [
+        [
+          /[a-z_$][\w.$]*/,
+          {
+            cases: {
+              "@typeKeywords": "type.identifier",
+              "@keywords": "keyword",
+              "@default": "operators",
+            },
+          },
+        ],
+        [/$[\w.$-_]+/, "variable.name"],
+        { include: "@whitespace" },
+        [/[()]/, "@brackets"],
+        [/\d*\.\d+([eE][\-+]?\d+)?/, "number.float"],
+        [/0[xX][0-9a-fA-F]+/, "number.hex"],
+        [/\d+/, "number"],
+        [/"([^"\\]|\\.)*$/, "string.invalid"],
+        [/"/, { token: "string.quote", bracket: "@open", next: "@string" }],
+      ],
+      comment: [
+        [/[^;)]+/, "comment"],
+        [/;\)/, "comment", "@pop"],
+        [/[;)]/, "comment"],
+      ],
+      string: [
+        [/[^\\"]+/, "string"],
+        [/"/, { token: "string.quote", bracket: "@close", next: "@pop" }],
+      ],
+      whitespace: [
+        [/[ \t\r\n]+/, "white"],
+        [/\(;/, "comment", "@comment"],
+        [/;;.*$/, "comment"],
+      ],
+    },
+  });
+
+  const m2p = new MonacoToProtocolConverter(monaco);
+  const p2m = new ProtocolToMonacoConverter(monaco);
+
+  const createModelListener = monaco.editor.onDidCreateModel(async (model) => {
+    if (model.getLanguageId() === "wat") {
+      const languageServer = await languageServerPromise;
+      languageServer.commit(model.uri.toString(), model.getValue());
+      updateDiagnosticMarkers(languageServer, model);
+
+      model.onDidChangeContent(() => {
+        languageServer.commit(model.uri.toString(), model.getValue());
+        updateDiagnosticMarkers(languageServer, model);
+      });
+    }
+  });
+  function updateDiagnosticMarkers(
+    languageServer: LanguageServerWrapper,
+    model: monaco.editor.ITextModel,
+  ) {
+    const diagnostics = languageServer.pullDiagnostics(model);
+    monaco.editor.setModelMarkers(
+      model,
+      "wat",
+      p2m.asDiagnostics(diagnostics.get("items")) ?? [],
+    );
+  }
   const completionProvider = monaco.languages.registerCompletionItemProvider(
     "wat",
     {
@@ -207,6 +230,7 @@ export async function startLanguageServer(): Promise<LanguageServerWrapper> {
       });
     },
     dispose() {
+      createModelListener.dispose();
       completionProvider.dispose();
       declarationProvider.dispose();
       definitionProvider.dispose();
@@ -224,28 +248,3 @@ export async function startLanguageServer(): Promise<LanguageServerWrapper> {
 }
 
 const languageServerPromise = startLanguageServer();
-
-monaco.editor.onDidCreateModel(async (model) => {
-  if (model.getLanguageId() === "wat") {
-    const languageServer = await languageServerPromise;
-    languageServer.commit(model.uri.toString(), model.getValue());
-    updateDiagnosticMarkers(languageServer, model);
-
-    model.onDidChangeContent(() => {
-      languageServer.commit(model.uri.toString(), model.getValue());
-      updateDiagnosticMarkers(languageServer, model);
-    });
-  }
-});
-
-function updateDiagnosticMarkers(
-  languageServer: LanguageServerWrapper,
-  model: monaco.editor.ITextModel,
-) {
-  const diagnostics = languageServer.pullDiagnostics(model);
-  monaco.editor.setModelMarkers(
-    model,
-    "wat",
-    p2m.asDiagnostics(diagnostics.get("items")) ?? [],
-  );
-}

@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./ui/App";
+import "./lsp";
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register(
