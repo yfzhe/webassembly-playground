@@ -204,9 +204,44 @@ export async function startLanguageServer(): Promise<LanguageServerWrapper> {
   });
   const renameProvider = monaco.languages.registerRenameProvider("wat", {
     provideRenameEdits(model, position, newName) {
-      return p2m.asWorkspaceEdit(
-        languageServer.rename(m2p.asRenameParams(model, position, newName)),
+      const result = languageServer.rename(
+        m2p.asRenameParams(model, position, newName),
       );
+      if (result.Err) {
+        return { edits: [], rejectReason: result.Err };
+      } else {
+        const { edits }: monaco.languages.WorkspaceEdit = p2m.asWorkspaceEdit(
+          result.Ok,
+        );
+        edits.forEach((edit) => {
+          // @ts-expect-error
+          edit.versionId = model.getVersionId();
+          // @ts-expect-error
+          edit.textEdit = edit.edit;
+        });
+        return { edits };
+      }
+    },
+    resolveRenameLocation(model, position) {
+      const range = p2m.asRange(
+        languageServer.prepareRename(
+          m2p.asTextDocumentPositionParams(model, position),
+        ),
+      );
+      if (range) {
+        return { range, text: model.getValueInRange(range) };
+      } else {
+        return {
+          range: new monaco.Range(
+            position.lineNumber,
+            position.column,
+            position.lineNumber,
+            position.column,
+          ),
+          text: "",
+          rejectReason: "This element can't be renamed.",
+        };
+      }
     },
   });
   const typeDefinitionProvider =
