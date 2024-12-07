@@ -12,7 +12,8 @@
   "type": "module",
   "scripts": {
     "start": "webpack serve --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "build:analyze": "webpack --mode production --analyze"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
@@ -35,6 +36,7 @@
     "style-loader": "^3.3.4",
     "typescript": "~5.4.3",
     "webpack": "^5.91.0",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.4",
     "webpack-merge": "^5.10.0"

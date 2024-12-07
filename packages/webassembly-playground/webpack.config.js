@@ -4,6 +4,7 @@ import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import NodePolyfillWebpackPlugin from "node-polyfill-webpack-plugin";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import ExamplesPlugin from "examples-plugin";
 
 /** @type {import("webpack").Configuration} */
@@ -83,7 +84,7 @@ const baseConfig = {
 };
 
 export default function (env, argv) {
-  const { mode } = argv;
+  const { mode, analyze } = argv;
 
   process.env.BABEL_ENV = mode;
 
@@ -91,6 +92,7 @@ export default function (env, argv) {
     case "production": {
       return merge(baseConfig, {
         mode: "production",
+        plugins: [analyze && new BundleAnalyzerPlugin()],
         output: {
           filename: "[name].[contenthash:8].js",
           chunkFilename: (pathData) => {
