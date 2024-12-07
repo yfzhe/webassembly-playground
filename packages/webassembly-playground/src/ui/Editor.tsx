@@ -34,6 +34,16 @@ const Editor = forwardRef<EditorRef, EditorProps>(
       };
     }, [initialContent]);
 
+    useEffect(() => {
+      const editor = editorRef.current;
+      if (!editor || !language) return;
+
+      const model = editor.getModel();
+      if (model && model.getLanguageId() !== language) {
+        monaco.editor.setModelLanguage(model, language);
+      }
+    }, [language]);
+
     return <div ref={containerRef} />;
   },
 );

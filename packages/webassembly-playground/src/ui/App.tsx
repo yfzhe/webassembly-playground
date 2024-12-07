@@ -11,6 +11,7 @@ import {
   previewIdAtom,
   utilPanelTabAtom,
 } from "../state";
+import { getLanguageByFileName } from "../util";
 
 import type { EditorRef } from "./Editor";
 import Examples from "./Examples";
@@ -18,7 +19,6 @@ import Features from "./Features";
 import Preview from "./Preview";
 import UtilPanel from "./UtilPanel";
 import "../style.css";
-import { getLanguageByFileName } from "../util";
 
 const GITHUB_REPO_URL = "https://github.com/yfzhe/webassembly-playground";
 
