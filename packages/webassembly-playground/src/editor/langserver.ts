@@ -1,4 +1,4 @@
-import type * as monaco from "monaco-editor";
+import * as monaco from "monaco-editor";
 import {
   MonacoToProtocolConverter,
   ProtocolToMonacoConverter,
@@ -10,8 +10,8 @@ export type LanguageServerWrapper = monaco.IDisposable & {
   pullDiagnostics(model: monaco.editor.ITextModel): any;
 };
 
-export async function startLanguageServer(): Promise<LanguageServerWrapper> {
-  const [monaco] = await Promise.all([import("monaco-editor"), init()]);
+async function startLanguageServer(): Promise<LanguageServerWrapper> {
+  await init();
   const languageServer = new LanguageServer();
 
   monaco.languages.register({ id: "wat", extensions: [".wat"] });
@@ -283,3 +283,4 @@ export async function startLanguageServer(): Promise<LanguageServerWrapper> {
 }
 
 const languageServerPromise = startLanguageServer();
+export default languageServerPromise;

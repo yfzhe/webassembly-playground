@@ -1,5 +1,7 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { forwardRef, use, useEffect, useImperativeHandle, useRef } from "react";
 import * as monaco from "monaco-editor";
+
+import startLangserverPromise from "./langserver";
 
 export type EditorProps = {
   initialContent?: string;
@@ -13,6 +15,8 @@ export type EditorRef = {
 // TODO: remove `forwardRef` once figuring out how to type the direct `ref`.
 const Editor = forwardRef<EditorRef, EditorProps>(
   ({ initialContent, language }, ref) => {
+    use(startLangserverPromise);
+
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 

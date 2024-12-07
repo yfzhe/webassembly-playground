@@ -13,7 +13,7 @@ import {
 } from "../state";
 import { getLanguageByFileName } from "../util";
 
-import type { EditorRef } from "./Editor";
+import type { EditorRef } from "../editor";
 import Examples from "./Examples";
 import Features from "./Features";
 import Preview from "./Preview";
@@ -22,7 +22,7 @@ import "../style.css";
 
 const GITHUB_REPO_URL = "https://github.com/yfzhe/webassembly-playground";
 
-const Editor = lazy(() => import("./Editor"));
+const Editor = lazy(() => import("../editor"));
 
 function App() {
   const files = useAtomValue(filesAtom);
