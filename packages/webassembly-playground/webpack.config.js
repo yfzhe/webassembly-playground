@@ -43,8 +43,8 @@ const baseConfig = {
       languages: ["typescript", "javascript"],
     }),
     new ExamplesPlugin({
-      source: "src/examples",
-      target: "src/examples/index.json",
+      source: "examples",
+      target: "src/examples.json",
     }),
     new HtmlWebpackPlugin({
       filename: "index.html",

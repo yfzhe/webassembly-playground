@@ -4,7 +4,7 @@ import type { Message as ConsoleMessage } from "console-feed/lib/definitions/Com
 import type { CompileLog } from "../service/lib";
 import { type Example, type File } from "../types";
 import { WASM_FEATURES_LIST, type WasmFeatures } from "../features";
-import examples from "../examples/index.json";
+import examples from "../examples.json";
 
 // Use the example "add" as default
 export const filesAtom = atom<Array<File>>(examples[1]!.files);

@@ -1,8 +1,8 @@
 import { useSetAtom } from "jotai";
 
 import { selectExampleAtom } from "../state";
+import examples from "../examples.json";
 import Dropdown from "./Dropdown";
-import examples from "../examples/index.json";
 
 function Examples() {
   const selectExample = useSetAtom(selectExampleAtom);

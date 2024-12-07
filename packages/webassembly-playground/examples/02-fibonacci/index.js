@@ -1,12 +1,13 @@
 const wasm = await WebAssembly.instantiateStreaming(fetch("main.wasm"), {});
 const { fib } = wasm.instance.exports;
 
-document.body.innerHTML = `<form id="form">
-     <label for="number">Input a number:</label>
-     <input type="number" min="0" name="number" id="number" />
-     <button type="submit">Calculate</button>
-   </form>
-   <div id="output"></div>`;
+document.body.innerHTML = `
+  <form id="form">
+    <label for="number">Input a number:</label>
+    <input type="number" min="0" name="number" id="number" />
+    <button type="submit">Calculate</button>
+  </form>
+  <div id="output"></div>`;
 
 const form = document.getElementById("form");
 const output = document.getElementById("output");
