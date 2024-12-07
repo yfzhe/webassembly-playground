@@ -10,6 +10,7 @@ export type EditorRef = {
   getEditor(): monaco.editor.IStandaloneCodeEditor | null;
 };
 
+// TODO: remove `forwardRef` once figuring out how to type the direct `ref`.
 const Editor = forwardRef<EditorRef, EditorProps>(
   ({ initialContent, language }, ref) => {
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
