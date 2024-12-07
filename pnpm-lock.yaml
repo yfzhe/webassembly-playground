@@ -60,8 +60,8 @@ importers:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
       wabt:
-        specifier: 1.0.32
-        version: 1.0.32
+        specifier: 1.0.36
+        version: 1.0.36
       wat-lsp:
         specifier: workspace:*
         version: link:../wat-lsp
@@ -3140,8 +3140,8 @@ packages:
     resolution: {integrity: sha512-jxGHxAuow67sNRkkS2svsW00ZACX+Zrbury9Au2A22px6sg4pe858Nnnwvtg0Pm4D0L/W9Yzn7N7X3R/RIMxsQ==}
     engines: {node: '>=16.11.0', npm: '>=8.0.0'}
 
-  wabt@1.0.32:
-    resolution: {integrity: sha512-1aHvkKaSrrl7qFtAbQ1RWVHLuJApRh7PtUdYvRtiUEKEhk0MOV0sTuz5cLF6jL5jPLRyifLbZcR65AEga/xBhQ==}
+  wabt@1.0.36:
+    resolution: {integrity: sha512-GAfEcFyvYRZ51xIZKeeCmIKytTz3ejCeEU9uevGNhEnqt9qXp3a8Q2O4ByZr6rKWcd8jV/Oj5cbDJFtmTYdchg==}
     hasBin: true
 
   wasm-pack@0.13.1:
@@ -6679,7 +6679,7 @@ snapshots:
     dependencies:
       vscode-jsonrpc: 8.2.1
 
-  wabt@1.0.32: {}
+  wabt@1.0.36: {}
 
   wasm-pack@0.13.1:
     dependencies:
