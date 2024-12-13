@@ -6,11 +6,10 @@
 declare const self: ServiceWorkerGlobalScope;
 
 import initWabt from "wabt";
-import path from "path";
 import { MessageType, type CompileLog, type Message } from "./lib";
 import type { File } from "../types";
 import type { WasmFeatures } from "../features";
-import { assert } from "../util";
+import { assert, extname } from "../util";
 
 let wabt: Awaited<ReturnType<typeof initWabt>> | undefined;
 
@@ -43,7 +42,7 @@ async function compile(files: Array<File>, features: WasmFeatures) {
 
   for (const file of files) {
     const { filename, content } = file;
-    const ext = path.extname(filename);
+    const ext = extname(filename);
 
     switch (ext) {
       case ".wat": {
@@ -52,7 +51,7 @@ async function compile(files: Array<File>, features: WasmFeatures) {
           module.validate();
           const result = module.toBinary({ log: true });
 
-          const wasmFilename = `${path.basename(filename, ext)}.wasm`;
+          const wasmFilename = filename.replace(/\.wat$/, ".wasm");
           fileStorage.set(wasmFilename, result.buffer);
 
           logs.push({ filename, result: "ok", log: result.log });
@@ -102,7 +101,7 @@ self.addEventListener("fetch", (evt) => {
     const filename = match[1] as string;
     const content = fileStorage.get(filename);
     if (content) {
-      const ext = path.extname(filename);
+      const ext = extname(filename);
       const headers = new Headers();
       headers.append("Content-Type", MIME_MAP[ext] ?? "");
       evt.respondWith(new Response(content, { headers }));

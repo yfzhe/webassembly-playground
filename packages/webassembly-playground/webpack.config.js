@@ -2,7 +2,6 @@ import path from "node:path";
 import { merge } from "webpack-merge";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import NodePolyfillWebpackPlugin from "node-polyfill-webpack-plugin";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import ExamplesPlugin from "examples-plugin";
@@ -33,12 +32,10 @@ const baseConfig = {
     extensions: [".ts", ".tsx", "..."],
     fallback: {
       fs: false,
+      path: false,
     },
   },
   plugins: [
-    new NodePolyfillWebpackPlugin({
-      onlyAliases: ["path"],
-    }),
     new MonacoWebpackPlugin({
       languages: ["typescript", "javascript"],
     }),
