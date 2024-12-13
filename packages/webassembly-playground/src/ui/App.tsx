@@ -11,7 +11,7 @@ import {
   previewIdAtom,
   utilPanelTabAtom,
 } from "../state";
-import { getLanguageByFileName } from "../util";
+import { getLanguageByFileName } from "../lib/file";
 
 import type { EditorRef } from "../editor";
 import Examples from "./Examples";

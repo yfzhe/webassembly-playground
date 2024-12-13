@@ -9,7 +9,8 @@ import initWabt from "wabt";
 import { MessageType, type CompileLog, type Message } from "./lib";
 import type { File } from "../types";
 import type { WasmFeatures } from "../features";
-import { assert, extname } from "../util";
+import { extname, getMimeType } from "../lib/file";
+import { assert } from "../lib/util";
 
 let wabt: Awaited<ReturnType<typeof initWabt>> | undefined;
 
@@ -86,11 +87,6 @@ self.addEventListener("message", async (evt) => {
   evt.ports[0]?.postMessage(result);
 });
 
-const MIME_MAP: Record<string, string> = {
-  ".wasm": "application/wasm",
-  ".js": "application/javascript; charset=utf-8",
-};
-
 self.addEventListener("fetch", (evt) => {
   const url = new URL(evt.request.url);
 
@@ -101,9 +97,8 @@ self.addEventListener("fetch", (evt) => {
     const filename = match[1] as string;
     const content = fileStorage.get(filename);
     if (content) {
-      const ext = extname(filename);
       const headers = new Headers();
-      headers.append("Content-Type", MIME_MAP[ext] ?? "");
+      headers.append("Content-Type", getMimeType(filename));
       evt.respondWith(new Response(content, { headers }));
     }
   }
