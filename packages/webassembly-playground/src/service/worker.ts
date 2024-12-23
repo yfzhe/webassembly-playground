@@ -10,21 +10,24 @@ import { MessageType, type CompileLog, type Message } from "./lib";
 import type { File } from "../types";
 import type { WasmFeatures } from "../features";
 import { extname, getMimeType } from "../lib/file";
-import { assert } from "../lib/util";
 
-let wabt: Awaited<ReturnType<typeof initWabt>> | undefined;
+// This type is not exported, so define it by our own.
+type WabtModule = Awaited<ReturnType<typeof initWabt>>;
+
+let _wabt: WabtModule | undefined;
+async function getWabt() {
+  if (!_wabt) {
+    const wabt = await initWabt();
+    _wabt = wabt;
+  }
+  return _wabt;
+}
 
 const fileStorage: Map<string, string | Uint8Array> = new Map();
 
-async function setupWabt() {
-  return initWabt().then((_wabt) => {
-    wabt = _wabt;
-  });
-}
-
 self.addEventListener("install", (evt) => {
   self.skipWaiting();
-  evt.waitUntil(setupWabt());
+  evt.waitUntil(getWabt());
 });
 
 self.addEventListener("activate", () => {
@@ -32,14 +35,9 @@ self.addEventListener("activate", () => {
 });
 
 async function compile(files: Array<File>, features: WasmFeatures) {
-  if (!wabt) {
-    await setupWabt();
-  }
-  assert(wabt);
-
-  fileStorage.clear();
-
+  const wabt = await getWabt();
   let logs: Array<CompileLog> = [];
+  fileStorage.clear();
 
   for (const file of files) {
     const { filename, content } = file;

@@ -32,13 +32,10 @@ const _previewIdAtom = atom<string | null>(null);
 export const previewIdAtom = atom((get) => get(_previewIdAtom));
 
 export const runAtom = atom(null, async (get, set) => {
-  const sw = navigator.serviceWorker.controller;
-  if (!sw) return;
-
   const files = get(filesAtom);
   const features = get(featuresAtom);
 
-  const logs = await compile(sw, files, features);
+  const logs = await compile(files, features);
   set(compileLogsAtom, logs);
 
   if (logs.some((log) => log.result === "err")) {

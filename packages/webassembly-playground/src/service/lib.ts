@@ -17,10 +17,12 @@ export type CompileLog = {
   log: string;
 };
 
-function postMessageToWorker<R>(
-  sw: ServiceWorker,
-  message: Message,
-): Promise<R> {
+async function postMessageToServiceWorker<R>(message: Message): Promise<R> {
+  const sw = navigator.serviceWorker.controller;
+  if (!sw) {
+    throw new Error("Service worker is not ready");
+  }
+
   return new Promise((resolve) => {
     const ch = new MessageChannel();
     ch.port1.onmessage = (evt) => resolve(evt.data as R);
@@ -29,11 +31,10 @@ function postMessageToWorker<R>(
 }
 
 export async function compile(
-  sw: ServiceWorker,
   files: Array<File>,
   features: WasmFeatures,
 ): Promise<Array<CompileLog>> {
-  return postMessageToWorker<Array<CompileLog>>(sw, {
+  return postMessageToServiceWorker<Array<CompileLog>>({
     type: MessageType.Compile,
     files,
     features,
