@@ -1,16 +1,8 @@
 import { lazy, Suspense } from "react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import type { File } from "../types";
-import { compile } from "../service/lib";
-import {
-  compileLogsAtom,
-  consoleLogsAtom,
-  featuresAtom,
-  filesAtom,
-  previewIdAtom,
-  utilPanelTabAtom,
-} from "../state";
+import { filesAtom, runAtom } from "../state";
 import { getLanguageByFileName } from "../lib/file";
 
 import Examples from "./Examples";
@@ -25,11 +17,7 @@ const Editor = lazy(() => import("../editor"));
 
 function App() {
   const [files, setFiles] = useAtom(filesAtom);
-  const features = useAtomValue(featuresAtom);
-  const setPreviewId = useSetAtom(previewIdAtom);
-  const setConsoleLogs = useSetAtom(consoleLogsAtom);
-  const setCompileLogs = useSetAtom(compileLogsAtom);
-  const setUtilPanelTab = useSetAtom(utilPanelTabAtom);
+  const run = useSetAtom(runAtom);
 
   const updateFileContent = (filename: string, content: string) => {
     const newFiles = files.reduce<Array<File>>((acc, cur) => {
@@ -38,26 +26,6 @@ function App() {
       return acc;
     }, []);
     setFiles(newFiles);
-  };
-
-  const preview = () => {
-    setPreviewId((id) => id + 1);
-  };
-
-  const run = async () => {
-    const sw = navigator.serviceWorker.controller;
-    if (!sw) return;
-
-    const logs = await compile(sw, files, features);
-    setCompileLogs(logs);
-
-    if (logs.some((log) => log.result === "err")) {
-      setUtilPanelTab("compile_log");
-    } else {
-      setConsoleLogs([]);
-      setUtilPanelTab("console");
-      preview();
-    }
   };
 
   const renderLoading = () => {

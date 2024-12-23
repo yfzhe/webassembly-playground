@@ -14,7 +14,8 @@
     "start": "webpack serve --mode development",
     "build": "webpack --mode production",
     "build:analyze": "webpack --mode production --analyze",
-    "test": "cross-env NODE_OPTIONS=\"--experimental-vm-modules --experimental-require-module\" jest"
+    "test": "cross-env NODE_OPTIONS=\"--experimental-vm-modules --experimental-require-module\" jest",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
@@ -53,6 +54,7 @@
     "monaco-editor-wrapper": "^5.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "uuid": "^11.0.3",
     "wabt": "1.0.36",
     "wat-lsp": "workspace:*"
   },

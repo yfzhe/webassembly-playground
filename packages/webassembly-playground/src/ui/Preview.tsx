@@ -32,7 +32,7 @@ function Preview() {
 
   return (
     <div className="preview">
-      {previewId > 0 && (
+      {!!previewId && (
         <iframe key={previewId} ref={iframeRef} src="./preview/index.html" />
       )}
     </div>
