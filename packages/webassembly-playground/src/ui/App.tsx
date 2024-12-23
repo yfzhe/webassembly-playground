@@ -1,4 +1,4 @@
-import { lazy, Suspense, useRef } from "react";
+import { lazy, Suspense } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 
 import type { File } from "../types";
@@ -13,7 +13,6 @@ import {
 } from "../state";
 import { getLanguageByFileName } from "../lib/file";
 
-import type { EditorRef } from "../editor";
 import Examples from "./Examples";
 import Features from "./Features";
 import Preview from "./Preview";
@@ -31,8 +30,6 @@ function App() {
   const setConsoleLogs = useSetAtom(consoleLogsAtom);
   const setCompileLogs = useSetAtom(compileLogsAtom);
   const setUtilPanelTab = useSetAtom(utilPanelTabAtom);
-
-  const codeBlocksRef = useRef(new Map<string, EditorRef>());
 
   const updateFileContent = (filename: string, content: string) => {
     const newFiles = files.reduce<Array<File>>((acc, cur) => {
@@ -96,13 +93,6 @@ function App() {
           value={content}
           language={getLanguageByFileName(filename)}
           onChange={(value) => updateFileContent(filename, value)}
-          ref={(node) => {
-            if (node) {
-              codeBlocksRef.current.set(filename, node);
-            } else {
-              codeBlocksRef.current.delete(filename);
-            }
-          }}
         />
       </div>
     );
