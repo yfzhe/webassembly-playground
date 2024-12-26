@@ -1,10 +1,19 @@
 import { atom } from "jotai";
 import { v4 as uuidv4 } from "uuid";
+import {
+  compressToEncodedURIComponent,
+  decompressFromEncodedURIComponent,
+} from "lz-string";
 import type { Message as ConsoleMessage } from "console-feed/lib/definitions/Component";
 
 import { compile, type CompileLog } from "../service/lib";
-import { type Example, type File } from "../types";
-import { WASM_FEATURES_LIST, type WasmFeatures } from "../features";
+import {
+  projectSchema,
+  type Example,
+  type File,
+  type WasmFeatures,
+} from "../types";
+import { WASM_FEATURES_LIST } from "../features";
 import examples from "../examples.json";
 
 // Use the example "add" as default
@@ -60,3 +69,37 @@ export const selectExampleAtom = atom(null, (_get, set, example: Example) => {
 export type UtilPanelTab = "console" | "compile_log";
 
 export const utilPanelTabAtom = atom<UtilPanelTab>("console");
+
+export const shareAtom = atom(null, async (get, _set) => {
+  const files = get(filesAtom);
+  const features = get(featuresAtom);
+
+  const data = JSON.stringify({ files, features });
+  const compressed = compressToEncodedURIComponent(data);
+
+  const url = new URL(location.href);
+  url.hash = compressed;
+  await navigator.clipboard.writeText(url.href);
+  alert("Link copied to clipboard.");
+});
+
+export const loadProjectFromUrlAtom = atom(null, (_get, set) => {
+  const { hash } = location;
+  if (!hash) return;
+
+  try {
+    const json = decompressFromEncodedURIComponent(hash.substring(1));
+    const data = JSON.parse(json);
+    const project = projectSchema.parse(data);
+
+    const { files, features } = project;
+    set(filesAtom, files);
+    set(featuresAtom, features);
+  } catch (e) {
+    // failed to load project from url
+  } finally {
+    const url = new URL(location.href);
+    url.hash = "";
+    history.replaceState(null, "", url);
+  }
+});

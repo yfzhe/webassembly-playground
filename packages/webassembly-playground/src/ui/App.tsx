@@ -1,8 +1,14 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { useAtom, useSetAtom } from "jotai";
 
 import type { File } from "../types";
-import { filesAtom, runAtom } from "../state";
+import {
+  featuresAtom,
+  filesAtom,
+  loadProjectFromUrlAtom,
+  runAtom,
+  shareAtom,
+} from "../state";
 import { getLanguageByFileName } from "../lib/file";
 
 import Examples from "./Examples";
@@ -18,6 +24,8 @@ const Editor = lazy(() => import("../editor"));
 function App() {
   const [files, setFiles] = useAtom(filesAtom);
   const run = useSetAtom(runAtom);
+  const share = useSetAtom(shareAtom);
+  const loadProjectFromUrl = useSetAtom(loadProjectFromUrlAtom);
 
   const updateFileContent = (filename: string, content: string) => {
     const newFiles = files.reduce<Array<File>>((acc, cur) => {
@@ -27,6 +35,10 @@ function App() {
     }, []);
     setFiles(newFiles);
   };
+
+  useEffect(() => {
+    loadProjectFromUrl();
+  }, []);
 
   const renderLoading = () => {
     return <div className="main-loading">Loading...</div>;
@@ -45,6 +57,11 @@ function App() {
           <li>
             <div className="nav-item" onClick={run}>
               Run
+            </div>
+          </li>
+          <li>
+            <div className="nav-item" onClick={share}>
+              Share
             </div>
           </li>
         </ul>

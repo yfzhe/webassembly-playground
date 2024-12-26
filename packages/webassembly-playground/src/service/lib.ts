@@ -1,5 +1,4 @@
-import type { WasmFeatures } from "../features";
-import type { File } from "../types";
+import type { File, WasmFeatures } from "../types";
 
 export enum MessageType {
   Compile = "Compile",

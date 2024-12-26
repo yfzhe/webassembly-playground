@@ -7,8 +7,7 @@ declare const self: ServiceWorkerGlobalScope;
 
 import initWabt from "wabt";
 import { MessageType, type CompileLog, type Message } from "./lib";
-import type { File } from "../types";
-import type { WasmFeatures } from "../features";
+import type { File, WasmFeatures } from "../types";
 import { extname, getMimeType } from "../lib/file";
 
 // This type is not exported, so define it by our own.

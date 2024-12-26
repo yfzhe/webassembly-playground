@@ -103,5 +103,6 @@ export const WASM_FEATURES_LIST = [
   },
 ] as const satisfies Array<FeatureConfigItem>;
 
-export type WasmFeature = (typeof WASM_FEATURES_LIST)[number]["flag"];
-export type WasmFeatures = Partial<Record<WasmFeature, boolean>>;
+export const WASM_FEATURES = WASM_FEATURES_LIST.map((item) => item.flag);
+
+export type WasmFeature = (typeof WASM_FEATURES)[number];
