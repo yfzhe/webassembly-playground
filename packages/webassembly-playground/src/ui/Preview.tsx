@@ -33,7 +33,12 @@ function Preview() {
   return (
     <div className="preview">
       {!!previewId && (
-        <iframe key={previewId} ref={iframeRef} src="./preview/index.html" />
+        <iframe
+          key={previewId}
+          ref={iframeRef}
+          sandbox="allow-same-origin allow-scripts allow-forms"
+          src="./preview/index.html"
+        />
       )}
     </div>
   );
