@@ -14,6 +14,7 @@ import { getLanguageByFileName } from "../lib/file";
 import Examples from "./Examples";
 import Features from "./Features";
 import Preview from "./Preview";
+import ToastContainer, { useToast } from "./Toast";
 import UtilPanel from "./UtilPanel";
 import "../style.css";
 
@@ -27,6 +28,8 @@ function App() {
   const share = useSetAtom(shareAtom);
   const loadProjectFromUrl = useSetAtom(loadProjectFromUrlAtom);
 
+  const toast = useToast();
+
   const updateFileContent = (filename: string, content: string) => {
     const newFiles = files.reduce<Array<File>>((acc, cur) => {
       const file = cur.filename === filename ? { ...cur, content } : cur;
@@ -34,6 +37,11 @@ function App() {
       return acc;
     }, []);
     setFiles(newFiles);
+  };
+
+  const handleShare = async () => {
+    await share();
+    toast("Link copied to clipboard.");
   };
 
   useEffect(() => {
@@ -60,7 +68,7 @@ function App() {
             </div>
           </li>
           <li>
-            <div className="nav-item" onClick={share}>
+            <div className="nav-item" onClick={handleShare}>
               Share
             </div>
           </li>
@@ -99,6 +107,7 @@ function App() {
           <UtilPanel />
         </Suspense>
       </main>
+      <ToastContainer />
     </>
   );
 }

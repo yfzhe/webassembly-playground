@@ -80,7 +80,6 @@ export const shareAtom = atom(null, async (get, _set) => {
   const url = new URL(location.href);
   url.hash = compressed;
   await navigator.clipboard.writeText(url.href);
-  alert("Link copied to clipboard.");
 });
 
 export const loadProjectFromUrlAtom = atom(null, (_get, set) => {
