@@ -49,6 +49,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "22ec99545bb0ed0ea7bb9b8e1e9122ea386ff8a48c0922e43f36d45ab09e0e80"
 
 [[package]]
+name = "either"
+version = "1.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "60b1af1c220855b6ceac025d3f6ecdd2b7c4894bfe9cd9bda4fbb4bc7c0d4cf0"
+
+[[package]]
 name = "equivalent"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -61,6 +67,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "17c704e9dbe1ddd863da1e6ff3567795087b1eb201ce80d8fa81162e1516500d"
 dependencies = [
  "bitflags",
+]
+
+[[package]]
+name = "fuzzy-matcher"
+version = "0.3.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "54614a3312934d066701a80f20f15fa3b56d67ac7722b39eea5b4c9dd1d66c94"
+dependencies = [
+ "thread_local",
 ]
 
 [[package]]
@@ -120,6 +135,15 @@ dependencies = [
  "js-sys",
  "wasm-bindgen",
  "web-sys",
+]
+
+[[package]]
+name = "itertools"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
+dependencies = [
+ "either",
 ]
 
 [[package]]
@@ -425,6 +449,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f18aa187839b2bdb1ad2fa35ead8c4c2976b64e4363c386d45ac0f7ee85c9233"
 
 [[package]]
+name = "thread_local"
+version = "1.1.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8b9ef9bad013ada3808854ceac7b46812a6465ba368859a37e2100283d2d719c"
+dependencies = [
+ "cfg-if",
+ "once_cell",
+]
+
+[[package]]
 name = "tiny_pretty"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -499,21 +533,22 @@ checksum = "6ee99da9c5ba11bd675621338ef6fa52296b76b83305e9b6e5c77d4c286d6d49"
 
 [[package]]
 name = "wat_formatter"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9c09aca95c4f47a9eafe68f8f4ff2314b11bb3ed0d0b1ce83213d30e939d0179"
+checksum = "57419c52befe9483b37d5264704107208a5ae83df6486535ecb1711551e95858"
 dependencies = [
  "line-index",
  "rowan",
+ "serde",
  "tiny_pretty",
  "wat_syntax",
 ]
 
 [[package]]
 name = "wat_parser"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "52d010134f3eb2ffe5e65164dbf62666fad6362f9f97f2dc47575cc8af998456"
+checksum = "5110530d440256312e4b379956df4417feadef38cf1fdf0e6ad0cf302aa6588a"
 dependencies = [
  "rowan",
  "wat_syntax",
@@ -522,16 +557,20 @@ dependencies = [
 
 [[package]]
 name = "wat_service"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aa716d383d45db95f43761a45cb6a954e428b0e95abdee1d43c0eda6d5ac97a1"
+checksum = "55abf36f070ea2b2915907a162a21986cfd884cd90c554393218d5bc2e55c854"
 dependencies = [
+ "fuzzy-matcher",
  "indexmap 2.7.0",
+ "itertools",
  "line-index",
  "lsp-types",
  "rowan",
  "rustc-hash 2.1.0",
  "salsa",
+ "serde",
+ "serde_json",
  "smallvec",
  "wat_formatter",
  "wat_parser",
@@ -540,9 +579,9 @@ dependencies = [
 
 [[package]]
 name = "wat_syntax"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "68af40e10d7df682e2547ffff9d6d81e5077a48245d0cf86b1d265d9f2c8cea9"
+checksum = "0ccd31979977532a016211bb28369cdcecceca7bf2641bd149de843df04c8a6a"
 dependencies = [
  "rowan",
 ]
