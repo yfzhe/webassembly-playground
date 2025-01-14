@@ -58,6 +58,11 @@ impl LanguageServer {
         to_value(&self.service.completion(from_value(params)?)).map_err(JsValue::from)
     }
 
+    #[wasm_bindgen(js_name = "documentHighlight")]
+    pub fn document_highlight(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.document_highlight(from_value(params)?)).map_err(JsValue::from)
+    }
+
     #[wasm_bindgen(js_name = "documentSymbol")]
     pub fn document_symbol(&self, params: JsValue) -> Result<JsValue, JsValue> {
         to_value(&self.service.document_symbol(from_value(params)?)).map_err(JsValue::from)
@@ -126,6 +131,16 @@ impl LanguageServer {
     #[wasm_bindgen]
     pub fn rename(&self, params: JsValue) -> Result<JsValue, JsValue> {
         to_value(&self.service.rename(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "selectionRange")]
+    pub fn selection_range(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.selection_range(from_value(params)?)).map_err(JsValue::from)
+    }
+
+    #[wasm_bindgen(js_name = "signatureHelp")]
+    pub fn signature_help(&self, params: JsValue) -> Result<JsValue, JsValue> {
+        to_value(&self.service.signature_help(from_value(params)?)).map_err(JsValue::from)
     }
 
     #[wasm_bindgen(js_name = "semanticTokensFull")]

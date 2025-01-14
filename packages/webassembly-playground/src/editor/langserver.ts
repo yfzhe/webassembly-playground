@@ -146,6 +146,16 @@ async function startLanguageServer(): Promise<LanguageServerWrapper> {
       },
     },
   );
+  const documentHightlightProvider =
+    monaco.languages.registerDocumentHighlightProvider("wat", {
+      provideDocumentHighlights(model, position) {
+        return p2m.asDocumentHighlights(
+          languageServer.documentHighlight(
+            m2p.asTextDocumentPositionParams(model, position),
+          ),
+        );
+      },
+    });
   const documentSymbolProvider =
     monaco.languages.registerDocumentSymbolProvider("wat", {
       provideDocumentSymbols(model) {
@@ -244,6 +254,19 @@ async function startLanguageServer(): Promise<LanguageServerWrapper> {
       }
     },
   });
+  const signatureHelpProvider = monaco.languages.registerSignatureHelpProvider(
+    "wat",
+    {
+      signatureHelpTriggerCharacters: ["(", ")"],
+      provideSignatureHelp(model, position) {
+        return p2m.asSignatureHelpResult(
+          languageServer.signatureHelp(
+            m2p.asTextDocumentPositionParams(model, position),
+          ),
+        );
+      },
+    },
+  );
   const typeDefinitionProvider =
     monaco.languages.registerTypeDefinitionProvider("wat", {
       provideTypeDefinition(model, position) {
@@ -267,6 +290,7 @@ async function startLanguageServer(): Promise<LanguageServerWrapper> {
     dispose() {
       createModelListener.dispose();
       completionProvider.dispose();
+      documentHightlightProvider.dispose();
       declarationProvider.dispose();
       definitionProvider.dispose();
       documentSymbolProvider.dispose();
@@ -276,6 +300,7 @@ async function startLanguageServer(): Promise<LanguageServerWrapper> {
       rangeFormattingProvider.dispose();
       referenceProvider.dispose();
       renameProvider.dispose();
+      signatureHelpProvider.dispose();
       typeDefinitionProvider.dispose();
       languageServer.free();
     },
