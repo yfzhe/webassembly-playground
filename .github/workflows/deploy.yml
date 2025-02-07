@@ -22,6 +22,7 @@ jobs:
 
       - name: install pnpm
         run: |
+          npm install -g corepack@latest
           corepack enable
           corepack install
 
