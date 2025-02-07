@@ -139,9 +139,9 @@ dependencies = [
 
 [[package]]
 name = "itertools"
-version = "0.13.0"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
+checksum = "2b192c782037fadd9cfa75548310488aabdbf3d2da73885b31bd0abd03351285"
 dependencies = [
  "either",
 ]
@@ -297,9 +297,9 @@ dependencies = [
 
 [[package]]
 name = "rowan"
-version = "0.15.16"
+version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0a542b0253fa46e632d27a1dc5cf7b930de4df8659dc6e720b647fc72147ae3d"
+checksum = "417a3a9f582e349834051b8a10c8d71ca88da4211e4093528e36b9845f6b5f21"
 dependencies = [
  "countme",
  "hashbrown 0.14.5",
@@ -533,9 +533,9 @@ checksum = "6ee99da9c5ba11bd675621338ef6fa52296b76b83305e9b6e5c77d4c286d6d49"
 
 [[package]]
 name = "wat_formatter"
-version = "0.2.0"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "57419c52befe9483b37d5264704107208a5ae83df6486535ecb1711551e95858"
+checksum = "034b58640758b0a43a56c83f3baac71cb5266e16ff21ee76e5f75428284729ca"
 dependencies = [
  "line-index",
  "rowan",
@@ -546,9 +546,9 @@ dependencies = [
 
 [[package]]
 name = "wat_parser"
-version = "0.2.0"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5110530d440256312e4b379956df4417feadef38cf1fdf0e6ad0cf302aa6588a"
+checksum = "4bc31661c9fe9521bcadc8f06c02cb6d515f069acc2856fd68d2df244e4640f5"
 dependencies = [
  "rowan",
  "wat_syntax",
@@ -557,9 +557,9 @@ dependencies = [
 
 [[package]]
 name = "wat_service"
-version = "0.2.0"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "55abf36f070ea2b2915907a162a21986cfd884cd90c554393218d5bc2e55c854"
+checksum = "8556ff04ef1684fa0441a622f6bb819413262221a4aeda8be7d520165010c79c"
 dependencies = [
  "fuzzy-matcher",
  "indexmap 2.7.0",
@@ -579,9 +579,9 @@ dependencies = [
 
 [[package]]
 name = "wat_syntax"
-version = "0.2.0"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0ccd31979977532a016211bb28369cdcecceca7bf2641bd149de843df04c8a6a"
+checksum = "9248fe75f8780d93135206d1b0bf78b7e5a8713f5baca3eccfc878995895b420"
 dependencies = [
  "rowan",
 ]
@@ -620,9 +620,9 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 
 [[package]]
 name = "winnow"
-version = "0.6.20"
+version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "36c1fec1a2bb5866f07c25f68c26e565c4c200aebb96d7e55710c19d3e8ac49b"
+checksum = "86e376c75f4f43f44db463cf729e0d3acbf954d13e22c51e26e4c264b4ab545f"
 dependencies = [
  "memchr",
 ]
