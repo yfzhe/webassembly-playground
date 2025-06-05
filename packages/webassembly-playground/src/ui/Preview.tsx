@@ -9,26 +9,29 @@ function Preview() {
   const previewId = useAtomValue(previewIdAtom);
   const setConsoleLogs = useSetAtom(consoleLogsAtom);
 
-  const hookedConsoleRef = useRef<HookedConsole | null>(null);
+  const iframeCallbackRef = useCallback<React.RefCallback<HTMLIFrameElement>>(
+    (iframe) => {
+      let hookedConsole: HookedConsole;
 
-  const iframeCallbackRef = useCallback((iframe: HTMLIFrameElement | null) => {
-    // TODO: use callbackref return value once React updated to 19, and we don't need hookedConsoleRef anymore
-    if (hookedConsoleRef.current) {
-      Unhook(hookedConsoleRef.current);
-      hookedConsoleRef.current = null;
-    }
-
-    if (iframe) {
       const appendConsoleLogs =
         // @ts-expect-error  why there are two `Message` types in the same package...
         (log) => setConsoleLogs((logs) => [...logs, Decode(log)]);
 
-      hookedConsoleRef.current = Hook(
+      if (iframe === null) {
+        throw new Error("This should not happen with React 19!");
+      }
+
+      hookedConsole = Hook(
         iframe.contentWindow!.window.console,
         appendConsoleLogs,
       );
-    }
-  }, []);
+
+      return () => {
+        Unhook(hookedConsole);
+      };
+    },
+    [],
+  );
 
   return (
     <div className="preview">

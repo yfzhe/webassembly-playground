@@ -16,12 +16,10 @@ const Editor = forwardRef<EditorRef, EditorProps>(({ initialContent }, ref) => {
     getEditor: () => editorRef.current,
   }));
 
-  const editorDomCallbackRef = useCallback(
-    (editorDom: HTMLDivElement | null) => {
-      if (editorRef.current) {
-        editorRef.current.dispose();
-        editorRef.current = null;
-      }
+  const editorDomCallbackRef = useCallback<React.RefCallback<HTMLDivElement>>(
+    (editorDom) => {
+      editorRef.current?.dispose();
+      editorRef.current = null;
 
       if (editorDom) {
         const editor = monaco.editor.create(editorDom, {
@@ -32,6 +30,11 @@ const Editor = forwardRef<EditorRef, EditorProps>(({ initialContent }, ref) => {
         });
         editorRef.current = editor;
       }
+
+      return () => {
+        editorRef.current?.dispose();
+        editorRef.current = null;
+      };
     },
     [initialContent],
   );
