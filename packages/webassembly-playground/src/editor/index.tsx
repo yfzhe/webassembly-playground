@@ -1,6 +1,13 @@
 // Learned alot from https://github.com/suren-atoyan/monaco-react
 
-import { forwardRef, use, useEffect, useImperativeHandle, useRef } from "react";
+import {
+  forwardRef,
+  use,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import * as monaco from "monaco-editor";
 
 import startLangserverPromise from "./langserver";
@@ -21,27 +28,35 @@ const Editor = forwardRef<EditorRef, EditorProps>(
     use(startLangserverPromise);
 
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
     const preventOnChangeEventRef = useRef<boolean>(false);
 
     useImperativeHandle(ref, () => ({
       getEditor: () => editorRef.current,
     }));
 
-    useEffect(() => {
-      const editor = monaco.editor.create(containerRef.current!, {
-        value,
-        language,
-        automaticLayout: true,
-        tabSize: 2,
-        minimap: { enabled: false },
-      });
-      editorRef.current = editor;
+    const editorRefCallback = useCallback<React.RefCallback<HTMLDivElement>>(
+      (editorDom) => {
+        editorRef.current?.dispose();
+        editorRef.current = null;
 
-      return () => {
-        editor.dispose();
-      };
-    }, []);
+        if (editorDom) {
+          const editor = monaco.editor.create(editorDom, {
+            value,
+            language,
+            automaticLayout: true,
+            tabSize: 2,
+            minimap: { enabled: false },
+          });
+          editorRef.current = editor;
+        }
+
+        return () => {
+          editorRef.current?.dispose();
+          editorRef.current = null;
+        };
+      },
+      [],
+    );
 
     useEffect(() => {
       const editor = editorRef.current;
@@ -88,7 +103,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(
       }
     }, [language]);
 
-    return <div ref={containerRef} />;
+    return <div ref={editorRefCallback} />;
   },
 );
 

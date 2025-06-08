@@ -48,10 +48,6 @@ function App() {
     loadProjectFromUrl();
   }, []);
 
-  const renderLoading = () => {
-    return <div className="main-loading">Loading...</div>;
-  };
-
   const renderNavBar = () => {
     return (
       <nav className="navbar">
@@ -100,7 +96,7 @@ function App() {
         </a>
       </header>
       <main className="app-main">
-        <Suspense fallback={renderLoading()}>
+        <Suspense fallback={<div className="main-loading">Loading...</div>}>
           {renderNavBar()}
           <div className="editors">{files.map(renderFileCodeBlock)}</div>
           <Preview />
