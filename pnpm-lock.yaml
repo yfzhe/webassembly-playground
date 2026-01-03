@@ -24,7 +24,7 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2
 
-  packages/wat-lsp:
+  packages/wat-langserver:
     devDependencies:
       wasm-pack:
         specifier: ^0.13.1
@@ -68,9 +68,9 @@ importers:
       wabt:
         specifier: 1.0.36
         version: 1.0.36
-      wat-lsp:
+      wat-langserver:
         specifier: workspace:*
-        version: link:../wat-lsp
+        version: link:../wat-langserver
       zod:
         specifier: ^3.24.1
         version: 3.24.1
@@ -1469,6 +1469,7 @@ packages:
   binary-install@1.1.0:
     resolution: {integrity: sha512-rkwNGW+3aQVSZoD0/o3mfPN6Yxh3Id0R/xzTVBVVpGNlVz8EGwusksxRlbk/A5iKTZt9zkMn3qIqmAt3vpfbzg==}
     engines: {node: '>=10'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   body-parser@1.20.3:
     resolution: {integrity: sha512-7rAxByjUMqQ3/bHJy7D6OGXvx/MMc4IqBn/X0fcM1QUcAItpZrBEYhWGem+tzXH90c+G01ypMcYJBO9Y30203g==}

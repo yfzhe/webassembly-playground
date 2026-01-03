@@ -3,7 +3,7 @@ import {
   MonacoToProtocolConverter,
   ProtocolToMonacoConverter,
 } from "@codingame/monaco-languageclient";
-import init, { LanguageServer } from "wat-lsp";
+import init, { LanguageServer } from "wat-langserver";
 
 export type LanguageServerWrapper = monaco.IDisposable & {
   commit(uri: string, content: string): void;
