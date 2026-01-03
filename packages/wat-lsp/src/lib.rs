@@ -24,7 +24,7 @@ impl LanguageServer {
 
     #[wasm_bindgen]
     pub fn commit(&mut self, uri: JsValue, content: String) -> Result<(), JsValue> {
-        self.service.commit(from_value(uri)?, content);
+        self.service.commit(from_value::<String>(uri)?, content);
         Ok(())
     }
 
