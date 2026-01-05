@@ -1,7 +1,7 @@
 {
-  "name": "webassembly-playground",
+  "name": "playwat",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Write, compile and run WebAssembly text mode in the browser",
   "author": "yfzhe",
   "license": "MIT",

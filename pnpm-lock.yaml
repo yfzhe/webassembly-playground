@@ -24,13 +24,7 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2
 
-  packages/wat-langserver:
-    devDependencies:
-      wasm-pack:
-        specifier: ^0.13.1
-        version: 0.13.1
-
-  packages/webassembly-playground:
+  packages/playwat:
     dependencies:
       '@codingame/monaco-languageclient':
         specifier: ^0.17.4
@@ -150,6 +144,12 @@ importers:
       webpack-merge:
         specifier: ^5.10.0
         version: 5.10.0
+
+  packages/wat-langserver:
+    devDependencies:
+      wasm-pack:
+        specifier: ^0.13.1
+        version: 0.13.1
 
 packages:
 
@@ -2720,6 +2720,7 @@ packages:
 
   monaco-editor-wrapper@5.5.3:
     resolution: {integrity: sha512-ceC+HnpUw/WehfH9uL7Y5j1m/46hQFcS/Z1VYpiFl+pieNf4/JfOWrzLEDqnxOK/qrPJ2fR6JB78mfZNLtPeQQ==}
+    deprecated: The development of monaco-wrapper-editor will not be continued. Please use https://www.npmjs.com/package/monaco-languageclient v10+ from now on.
     peerDependencies:
       monaco-editor: npm:@codingame/monaco-vscode-editor-api@~8.0.4
       monaco-languageclient: ~8.8.3

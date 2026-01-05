@@ -90,7 +90,7 @@ function App() {
   return (
     <>
       <header className="site-header">
-        <h1 className="title">WebAssembly Playground</h1>
+        <h1 className="title">PlayWat</h1>
         <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">
           GitHub
         </a>
